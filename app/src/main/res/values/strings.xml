@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Formacion Profesional </string>
+    <string name="action_settings">Ajustes</string>
+    <string name="facebook_app_id">674509706070739</string>
+    <string name="drawer_open">Open Navigation Drawer</string>
+    <string name="drawer_closed">Close Navigation Drawer</string>
+</resources>

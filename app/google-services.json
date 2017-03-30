@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "64500376949",
+    "firebase_url": "https://fpes-156817.firebaseio.com",
+    "project_id": "fpes-156817",
+    "storage_bucket": "fpes-156817.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64500376949:android:9a8e892d9d46afc7",
+        "android_client_info": {
+          "package_name": "com.argandevteam.fpes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64500376949-lblibkcnk5r15uc4mos5kprjrc2okm2r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.argandevteam.fpes",
+            "certificate_hash": "27e7ce5027259f04c6deef333d8bfae851986a19"
+          }
+        },
+        {
+          "client_id": "64500376949-0ij6bmra7pe27139ntao4f3hffh252il.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.argandevteam.fpes",
+            "certificate_hash": "7fafbc873ca04a25d264d311e8f669e3e5ad81a2"
+          }
+        },
+        {
+          "client_id": "64500376949-1erlve8i66osmdfq6l6kc3p4e7igivhg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABNNgSTEBqQ6Kk1-TEvxj5H18WgJg4Dos"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64500376949-1erlve8i66osmdfq6l6kc3p4e7igivhg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
