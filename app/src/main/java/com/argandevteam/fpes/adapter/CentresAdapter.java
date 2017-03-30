@@ -50,7 +50,7 @@ public class CentresAdapter extends BaseAdapter {
         // inflate the layout for each list row
         if (convertView == null) {
             convertView = LayoutInflater.from(context).
-                    inflate(R.layout.list_item, parent, false);
+                    inflate(R.layout.centre_item, parent, false);
         }
         ViewHolder viewHolder = new ViewHolder(convertView);
 
