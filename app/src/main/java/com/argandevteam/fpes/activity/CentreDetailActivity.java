@@ -1,10 +1,12 @@
-package com.argandevteam.fpes;
+package com.argandevteam.fpes.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.adapter.ReviewsAdapter;
 import com.argandevteam.fpes.model.Review;
 import com.squareup.picasso.Picasso;
@@ -20,6 +22,8 @@ public class CentreDetailActivity extends AppCompatActivity {
     ImageView imageView;
     @BindView(R.id.lvReviews)
     ListView lvReviews;
+    @BindView(R.id.my_toolbar)
+    Toolbar mToolbar;
 
     ReviewsAdapter reviewsAdapter;
 
@@ -31,7 +35,8 @@ public class CentreDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
-
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitle("Detalles");
         Picasso.with(this)
                 .load("https://i2.wp.com/extracine.com/files/2012/07/utad-las-rozas-madrid.jpeg?resize=1160%2C830").into(imageView);
 
@@ -42,4 +47,8 @@ public class CentreDetailActivity extends AppCompatActivity {
         reviewsAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

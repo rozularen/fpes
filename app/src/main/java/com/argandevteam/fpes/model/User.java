@@ -8,14 +8,18 @@ import android.net.Uri;
 
 public class User {
 
-    public Uri profilePhoto;
+    public Uri photoUrl;
+    public String uid;
     public String name;
     public String email;
 
     public User() {
     }
 
-    public User(String email) {
+    public User(String uid, String email, String name, Uri photoUrl) {
+        this.uid = uid;
+        this.name = name;
         this.email = email;
+        this.photoUrl = photoUrl;
     }
 }

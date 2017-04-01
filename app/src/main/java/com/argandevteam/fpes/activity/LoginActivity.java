@@ -1,8 +1,8 @@
-package com.argandevteam.fpes;
+package com.argandevteam.fpes.activity;
 
 import android.content.Intent;
 
-import com.argandevteam.fpes.activity.MainActivity;
+import com.argandevteam.fpes.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -36,6 +36,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,14 +51,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    CallbackManager callbackManager;
+    private DatabaseReference mDatabase;
 
-    @BindView(R.id.fb_login_button) LoginButton fbLoginButton;
-    @BindView(R.id.sign_in_button) SignInButton googleLoginButton;
-    @BindView(R.id.input_email) EditText emailText;
-    @BindView(R.id.input_password) EditText passwordText;
-    @BindView(R.id.login_button) Button loginButton;
-    @BindView(R.id.link_signup) TextView signupLink;
+    private static final int RC_SIGN_IN_GOOGLE = 1;
+
+    CallbackManager mCallbackManger;
+
+    @BindView(R.id.fb_login_button)
+    LoginButton fbLoginButton;
+    @BindView(R.id.sign_in_button)
+    SignInButton googleLoginButton;
+    @BindView(R.id.input_email)
+    EditText emailText;
+    @BindView(R.id.input_password)
+    EditText passwordText;
+    @BindView(R.id.login_button)
+    Button loginButton;
+    @BindView(R.id.link_signup)
+    TextView signupLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +81,36 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setUpGoogleSignIn();
         setUpFacebookLogin();
 
+        signupLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(registerIntent);
+
+            }
+        });
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference usersRef = mDatabase.child("users");
+        usersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         googleLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 googleSignIn();
             }
         });
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +118,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        LoginManager.getInstance().registerCallback(callbackManager,
+        fbLoginButton.setReadPermissions("email", "public_profile");
+        mCallbackManger = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManger,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
@@ -96,14 +137,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     public void onError(FacebookException exception) {
                         // App code
                         Toast.makeText(LoginActivity.this, "FAIL", Toast.LENGTH_SHORT).show();
-                        Log.d("---------------------",exception.toString());
+                        Log.d("---------------------", exception.toString());
                     }
                 });
     }
 
     private void setUpFacebookLogin() {
         fbLoginButton.setReadPermissions("email", "public_profile");
-        callbackManager = CallbackManager.Factory.create();
+        mCallbackManger = CallbackManager.Factory.create();
     }
 
     private void setUpFirebase() {
@@ -115,7 +156,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Toast.makeText(LoginActivity.this, "User: " + user.getEmail() + " is logged in.", Toast.LENGTH_SHORT).show();
+
                     Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(loginIntent);
                     finish();
@@ -164,20 +205,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Facebook Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                if (!task.isSuccessful()) {
+                    Log.w(TAG, "signInWithCredential", task.getException());
+                    Toast.makeText(LoginActivity.this, "Facebook Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void firebaseSignIn(String email, String password) {
@@ -201,28 +240,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
-
-    private void handleGoogleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleGoogleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-            firebaseAuthWithGoogle(acct);
-            updateUI(true);
-        } else {
-            // Signed out, show unauthenticated UI.
-            updateUI(false);
-        }
-    }
-
-    private void updateUI(boolean b) {
-        if (b) {
-            Toast.makeText(this, "Logged in succesfully!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "NOPE", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void googleSignIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, 1);
@@ -231,10 +248,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+        mCallbackManger.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN_GOOGLE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleGoogleSignInResult(result);
+            if (result.isSuccess()) {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                firebaseAuthWithGoogle(acct);
+            } else {
+                Log.d("Google_Sign_In", "Login failed");
+            }
         }
 
     }

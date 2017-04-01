@@ -19,15 +19,15 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"></meta-data>
         </activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".CentreDetailActivity"></activity>
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.CentreDetailActivity"></activity>
     </application>
 
 </manifest>

@@ -26,6 +26,7 @@ public class Centre {
     public Centre() {
     }
 
+
     public Centre(String uid, String province, String city, String nature,
                   String type, String municipality, int center_code,
                   int postal_code, String specific_den, String generic_den) {
@@ -39,6 +40,11 @@ public class Centre {
         this.postal_code = postal_code;
         this.specific_den = specific_den;
         this.generic_den = generic_den;
+    }
+
+    public Centre(String s, String s1) {
+        this.province = s;
+        this.specific_den = s1;
     }
 
     // [START centre_to_map]

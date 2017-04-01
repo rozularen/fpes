@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.argandevteam.fpes.CentreDetailActivity;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.model.Review;
 
