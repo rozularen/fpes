@@ -1,5 +1,6 @@
 package com.argandevteam.fpes.activity;
 
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.fragment.CentreFragment;
+import com.argandevteam.fpes.fragment.CentreMapFragment;
+import com.argandevteam.fpes.fragment.ProfileFragment;
 import com.argandevteam.fpes.model.Centre;
 import com.facebook.CallbackManager;
 import com.google.android.gms.auth.api.Auth;
@@ -37,7 +40,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements CentreFragment.OnListFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "MainActivity";
-    private CentresAdapter centresAdapter;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         setUpGoogleSignIn();
 
         setSupportActionBar(mToolbar);
+
         mToolbar.setTitle(R.string.app_name);
         mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
@@ -80,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
                 }
             }
         });
+
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 mToolbar, R.string.drawer_open, R.string.drawer_closed);
         // Set the list's click listener
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
                 return true;
             }
         });
+
     }
 
     private void setUpFirebase() {
@@ -115,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
                 // ...
             }
         };
+
     }
 
     private void setUpGoogleSignIn() {
@@ -151,22 +157,23 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
                 }
             }).show();
 
-
-        } else if (menuItem.getItemId() == R.id.fragment_centre_list) {
-            fragmentClass = CentreFragment.class;
+        } else if (menuItem.getItemId() == R.id.nav_map) {
+            fragmentClass = CentreMapFragment.class;
+        } else if (menuItem.getItemId() == R.id.nav_profile) {
+            fragmentClass = ProfileFragment.class;
         } else {
             fragmentClass = CentreFragment.class;
         }
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
-            setTitle(menuItem.getTitle());
+            if(fragmentClass != null) {
+                fragment = (Fragment) fragmentClass.newInstance();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
+                setTitle(menuItem.getTitle());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
@@ -179,9 +186,16 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         }
     }
 
+    private void handleIntent(Intent intent){
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.d(TAG, "handleIntent: " + query);
+        }
+    }
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d(TAG, "onConnectionFailed: ");
     }
 
 

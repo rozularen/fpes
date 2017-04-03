@@ -115,6 +115,7 @@
     <orderEntry type="library" exported="" name="constraint-layout-solver-1.0.0-alpha9" level="project" />
     <orderEntry type="library" exported="" name="transition-25.3.1" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-25.0.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-maps-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.4.0" level="project" />
     <orderEntry type="library" exported="" name="customtabs-25.0.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />

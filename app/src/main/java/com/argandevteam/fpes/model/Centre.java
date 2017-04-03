@@ -1,5 +1,8 @@
 package com.argandevteam.fpes.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -10,8 +13,9 @@ import java.util.Map;
  * Created by markc on 24/11/2016.
  */
 @IgnoreExtraProperties
-public class Centre {
+public class Centre implements Parcelable{
 
+    public String address;
     public String uid;
     public String province;
     public String city;
@@ -26,11 +30,16 @@ public class Centre {
     public Centre() {
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 
-    public Centre(String uid, String province, String city, String nature,
+    public Centre(String address, String uid, String province, String city, String nature,
                   String type, String municipality, int center_code,
                   int postal_code, String specific_den, String generic_den) {
         this.uid = uid;
+        this.address = address;
         this.province = province;
         this.city = city;
         this.nature = nature;
@@ -47,6 +56,31 @@ public class Centre {
         this.specific_den = s1;
     }
 
+    protected Centre(Parcel in) {
+        uid = in.readString();
+        province = in.readString();
+        city = in.readString();
+        nature = in.readString();
+        type = in.readString();
+        municipality = in.readString();
+        specific_den = in.readString();
+        generic_den = in.readString();
+        center_code = in.readInt();
+        postal_code = in.readInt();
+    }
+
+    public static final Creator<Centre> CREATOR = new Creator<Centre>() {
+        @Override
+        public Centre createFromParcel(Parcel in) {
+            return new Centre(in);
+        }
+
+        @Override
+        public Centre[] newArray(int size) {
+            return new Centre[size];
+        }
+    };
+
     // [START centre_to_map]
     @Exclude
     public Map<String, Object> toMap() {
@@ -62,6 +96,25 @@ public class Centre {
         result.put("generic_den", generic_den);
 
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(uid);
+        dest.writeString(city);
+        dest.writeString(province);
+        dest.writeString(nature);
+        dest.writeString(type);
+        dest.writeString(municipality);
+        dest.writeString(specific_den);
+        dest.writeString(generic_den);
+        dest.writeInt(center_code);
+        dest.writeInt(postal_code);
     }
     // [END centre_to_map]
 }

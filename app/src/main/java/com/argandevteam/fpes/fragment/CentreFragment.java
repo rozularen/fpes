@@ -1,16 +1,27 @@
 package com.argandevteam.fpes.fragment;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.argandevteam.fpes.R;
+import com.argandevteam.fpes.activity.CentreDetailActivity;
+import com.argandevteam.fpes.activity.MainActivity;
 import com.argandevteam.fpes.adapter.MyCentreRecyclerViewAdapter;
 import com.argandevteam.fpes.model.Centre;
 import com.google.firebase.database.DataSnapshot;
@@ -34,8 +45,6 @@ import butterknife.ButterKnife;
 public class CentreFragment extends Fragment {
 
     private static final String TAG = "CentreFragment";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
     @BindView(R.id.lvCentres)
     RecyclerView recyclerView;
     private OnListFragmentInteractionListener mListener;
@@ -55,6 +64,7 @@ public class CentreFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //Firebase
         myList = new ArrayList<>();
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
             @Override
@@ -62,8 +72,8 @@ public class CentreFragment extends Fragment {
                 for (DataSnapshot centreSnapshot : dataSnapshot.getChildren()) {
                     Centre centre = centreSnapshot.getValue(Centre.class);
                     myList.add(centre);
-                    Log.d(TAG, "onDataChange: " + centreSnapshot.getValue());
                 }
+
                 myCentreRecyclerViewAdapter.notifyDataSetChanged();
             }
 
@@ -84,10 +94,20 @@ public class CentreFragment extends Fragment {
 
         Context context = view.getContext();
         recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        myCentreRecyclerViewAdapter = new MyCentreRecyclerViewAdapter(myList, mListener);
+        myCentreRecyclerViewAdapter = new MyCentreRecyclerViewAdapter(getActivity(), myList, mListener);
         recyclerView.setAdapter(myCentreRecyclerViewAdapter);
+        myCentreRecyclerViewAdapter.setOnItemClickListener(new MyCentreRecyclerViewAdapter.ItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
 
+                Intent detailsIntent = new Intent(getActivity(), CentreDetailActivity.class);
+                detailsIntent.putExtra("centre", myList.get(position));
+                startActivity(detailsIntent);
+                Log.d(TAG, "onClick: " + myList.get(position).specific_den);
+            }
+        });
         return view;
     }
 
@@ -108,6 +128,39 @@ public class CentreFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+        MenuItemCompat.setShowAsAction(menuItem, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setActionView(menuItem, searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        searchView.setOnClickListener(new View.OnClickListener() {
+                                          @Override
+                                          public void onClick(View v) {
+
+                                          }
+                                      }
+        );
+        SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
+
+        ComponentName componentName = new ComponentName(getContext(), MainActivity.class);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
