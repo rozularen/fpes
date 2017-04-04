@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,12 +61,14 @@ public class CentreFragment extends Fragment {
     public CentreFragment() {
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Firebase
         myList = new ArrayList<>();
-
+        setHasOptionsMenu(true);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
             @Override
@@ -130,9 +134,23 @@ public class CentreFragment extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_search){
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.frame_layout, new SearchFragment());
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        MenuItem menuItem = menu.findItem(R.id.action_search);
+        //super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.search_menu, menu);
+
+       /* MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
         MenuItemCompat.setShowAsAction(menuItem, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
         MenuItemCompat.setActionView(menuItem, searchView);
@@ -158,7 +176,7 @@ public class CentreFragment extends Fragment {
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
         ComponentName componentName = new ComponentName(getContext(), MainActivity.class);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));*/
     }
 
 

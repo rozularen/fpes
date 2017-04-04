@@ -65,8 +65,6 @@ public class CentreMapFragment extends Fragment implements OnMapReadyCallback {
 
         ButterKnife.bind(this, view);
 
-
-
         mapView.onCreate(savedInstanceState);
 
         mapView.onResume();
