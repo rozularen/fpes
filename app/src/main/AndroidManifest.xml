@@ -36,7 +36,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.CentreDetailActivity" />
     </application>
 
 </manifest>

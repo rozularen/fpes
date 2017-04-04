@@ -1,18 +1,13 @@
 package com.argandevteam.fpes.fragment;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.activity.CentreDetailActivity;
-import com.argandevteam.fpes.activity.MainActivity;
 import com.argandevteam.fpes.adapter.MyCentreRecyclerViewAdapter;
 import com.argandevteam.fpes.model.Centre;
 import com.google.firebase.database.DataSnapshot;
@@ -106,9 +99,17 @@ public class CentreFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
 
-                Intent detailsIntent = new Intent(getActivity(), CentreDetailActivity.class);
-                detailsIntent.putExtra("centre", myList.get(position));
-                startActivity(detailsIntent);
+                DetailsFragment detailsFragment = new DetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("centre", myList.get(position));
+                detailsFragment.setArguments(bundle);
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, detailsFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
                 Log.d(TAG, "onClick: " + myList.get(position).specific_den);
             }
         });
