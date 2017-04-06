@@ -7,14 +7,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/lvCentres"
-        android:name="com.argandevteam.fpes.fragment.CentreFragment"
+    <TextView
+        android:id="@+id/searchLink"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layoutManager="LinearLayoutManager"
-        tools:context="com.argandevteam.fpes.fragment.CentreFragment"
-        tools:listitem="@layout/fragment_centre" />
+        android:layout_height="wrap_content"
+        android:background="#3140a0"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="BUSQUEDA AVANZADA"
+        android:textColor="#FFFF" />
+
+    <ScrollView
+        android:id="@+id/childScroll"
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/searchResultText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="16dp"
+                android:text="Mostrando 392 centros" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/lvCentres"
+                android:name="com.argandevteam.fpes.fragment.CentreFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                app:layoutManager="LinearLayoutManager"
+                tools:context="com.argandevteam.fpes.fragment.CentreFragment"
+                tools:listitem="@layout/fragment_centre" />
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
 </LinearLayout>

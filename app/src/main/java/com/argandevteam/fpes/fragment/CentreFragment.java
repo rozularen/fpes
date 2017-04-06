@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,11 +14,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.adapter.MyCentreRecyclerViewAdapter;
+import com.argandevteam.fpes.adapter.CentreRecyclerAdapter;
 import com.argandevteam.fpes.model.Centre;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,7 +48,9 @@ public class CentreFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private List<Centre> myList;
     private DatabaseReference mDatabase;
-    MyCentreRecyclerViewAdapter myCentreRecyclerViewAdapter;
+    CentreRecyclerAdapter centreRecyclerAdapter;
+    @BindView(R.id.childScroll)
+    ScrollView childScroll;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -71,7 +76,7 @@ public class CentreFragment extends Fragment {
                     myList.add(centre);
                 }
 
-                myCentreRecyclerViewAdapter.notifyDataSetChanged();
+                centreRecyclerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -89,13 +94,15 @@ public class CentreFragment extends Fragment {
         // Set the adapter
         ButterKnife.bind(this, view);
 
+
         Context context = view.getContext();
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        myCentreRecyclerViewAdapter = new MyCentreRecyclerViewAdapter(getActivity(), myList, mListener);
-        recyclerView.setAdapter(myCentreRecyclerViewAdapter);
-        myCentreRecyclerViewAdapter.setOnItemClickListener(new MyCentreRecyclerViewAdapter.ItemClickListener() {
+        centreRecyclerAdapter = new CentreRecyclerAdapter(getActivity(), myList, mListener);
+        recyclerView.setAdapter(centreRecyclerAdapter);
+        centreRecyclerAdapter.setOnItemClickListener(new CentreRecyclerAdapter.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
 
@@ -111,6 +118,14 @@ public class CentreFragment extends Fragment {
                 fragmentTransaction.commit();
 
                 Log.d(TAG, "onClick: " + myList.get(position).specific_den);
+            }
+        });
+        childScroll.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
         return view;
@@ -150,34 +165,6 @@ public class CentreFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search_menu, menu);
-
-       /* MenuItem menuItem = menu.findItem(R.id.action_search);
-        SearchView searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
-        MenuItemCompat.setShowAsAction(menuItem, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
-        MenuItemCompat.setActionView(menuItem, searchView);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        searchView.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View v) {
-
-                                          }
-                                      }
-        );
-        SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
-
-        ComponentName componentName = new ComponentName(getContext(), MainActivity.class);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));*/
     }
 
 

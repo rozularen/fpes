@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.fragment.CentreFragment;
-import com.argandevteam.fpes.fragment.CentreMapFragment;
+import com.argandevteam.fpes.fragment.MapFragment;
 import com.argandevteam.fpes.fragment.ProfileFragment;
 import com.argandevteam.fpes.model.Centre;
 import com.facebook.CallbackManager;
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
             }).show();
 
         } else if (menuItem.getItemId() == R.id.nav_map) {
-            fragmentClass = CentreMapFragment.class;
+            fragmentClass = MapFragment.class;
         } else if (menuItem.getItemId() == R.id.nav_profile) {
             fragmentClass = ProfileFragment.class;
         } else {
