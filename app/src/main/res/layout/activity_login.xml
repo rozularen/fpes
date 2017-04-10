@@ -12,12 +12,17 @@
         android:paddingRight="24dp"
         android:paddingTop="56dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
+   <!--     <ImageView
+            android:layout_width="190dp"
+            android:layout_height="190dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_fp" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Formacion "/>
 
         <LinearLayout
             android:layout_width="match_parent"

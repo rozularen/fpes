@@ -49,8 +49,6 @@ public class CentreFragment extends Fragment {
     private List<Centre> myList;
     private DatabaseReference mDatabase;
     CentreRecyclerAdapter centreRecyclerAdapter;
-    @BindView(R.id.childScroll)
-    ScrollView childScroll;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -98,7 +96,7 @@ public class CentreFragment extends Fragment {
         Context context = view.getContext();
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         centreRecyclerAdapter = new CentreRecyclerAdapter(getActivity(), myList, mListener);
         recyclerView.setAdapter(centreRecyclerAdapter);
@@ -120,14 +118,7 @@ public class CentreFragment extends Fragment {
                 Log.d(TAG, "onClick: " + myList.get(position).specific_den);
             }
         });
-        childScroll.setOnTouchListener(new View.OnTouchListener() {
 
-            public boolean onTouch(View v, MotionEvent event) {
-                // Disallow the touch request for parent scroll on touch of child view
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
         return view;
     }
 

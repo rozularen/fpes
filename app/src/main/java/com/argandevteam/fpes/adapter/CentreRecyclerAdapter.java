@@ -25,6 +25,7 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
     public interface ItemClickListener {
         public void onClick(View view, int position);
     }
+
     private ItemClickListener listener;
     private static final String TAG = "RecyclerViewAdapter";
     private final List<Centre> mValues;
@@ -41,8 +42,7 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_centre, parent, false);
-
+                .inflate(R.layout.centre_card, parent, false);
         ViewHolder viewHolder = new ViewHolder(view, listener);
         return viewHolder;
     }
@@ -52,15 +52,16 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Centre centre = mValues.get(position);
         holder.specificDenText.setText(mValues.get(position).specific_den);
-        holder.provinceText.setText(mValues.get(position).province);
-        holder.cityText.setText(mValues.get(position).municipality);
+        holder.addressText.setText(mValues.get(position).address);
+        //holder.provinceText.setText(mValues.get(position).province);
+        //holder.cityText.setText(mValues.get(position).municipality);
         holder.typeText.setText(mValues.get(position).nature);
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         mListener.onListFragmentInteraction(holder.centre);
     }
 
-    public void setOnItemClickListener(ItemClickListener listener){
+    public void setOnItemClickListener(ItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -75,12 +76,16 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
         Centre centre;
         @BindView(R.id.tSpecificDenomination)
         TextView specificDenText;
-        @BindView(R.id.tProvince)
-        TextView provinceText;
-        @BindView(R.id.tCity)
-        TextView cityText;
         @BindView(R.id.tType)
         TextView typeText;
+        @BindView(R.id.commentsCount)
+        TextView commentsCount;
+        @BindView(R.id.tAddress)
+        TextView addressText;
+        /*@BindView(R.id.tProvince)
+        TextView provinceText;
+        @BindView(R.id.tCity)
+        TextView cityText;*/
 
 
         ItemClickListener mListener;
