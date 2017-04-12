@@ -17,5 +17,5 @@
             android:scrollbars="vertical"
             app:layoutManager="LinearLayoutManager"
             tools:context="com.argandevteam.fpes.fragment.CentreFragment"
-            tools:listitem="@layout/fragment_centre" />
+            tools:listitem="@layout/centre_card" />
 </LinearLayout>

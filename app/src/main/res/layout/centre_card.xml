@@ -48,8 +48,6 @@
             android:scaleY="0.5"
             android:layout_gravity="center" />
 
-
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -63,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="5dp"
-            android:drawableStart="@drawable/ic_directions_black_24dp"
+            android:drawableStart="@drawable/ic_directions_white"
             android:gravity="center"
             android:text="Las Rozas" />
 
@@ -81,7 +79,7 @@
                 android:layout_weight="5"
                 android:layout_height="wrap_content"
                 android:drawablePadding="5dp"
-                android:drawableStart="@drawable/ic_type_black_24dp"
+                android:drawableStart="@drawable/ic_type_white"
                 android:gravity="start|center"
                 android:text="Publico" />
 
@@ -94,7 +92,7 @@
                 android:drawablePadding="5dp"
                 android:textColor="@color/cardTextColor"
 
-                android:drawableStart="@drawable/ic_comment_black_24dp"
+                android:drawableStart="@drawable/ic_comment_white"
                 android:text="6" />
 
         </LinearLayout>

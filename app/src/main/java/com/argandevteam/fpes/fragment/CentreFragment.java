@@ -92,11 +92,9 @@ public class CentreFragment extends Fragment {
         // Set the adapter
         ButterKnife.bind(this, view);
 
-
         Context context = view.getContext();
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         centreRecyclerAdapter = new CentreRecyclerAdapter(getActivity(), myList, mListener);
         recyclerView.setAdapter(centreRecyclerAdapter);

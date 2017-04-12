@@ -57,12 +57,12 @@ public class ReviewsAdapter extends BaseAdapter {
         // get current item to be displayed
         Review currentItem = (Review) getItem(position);
         viewHolder.userName.setText("Marcos Stival");
-        viewHolder.userReview.setText(currentItem.text);
+//        viewHolder.userReview.setText(currentItem.text);
 
         return convertView;
     }
 
-    static class ViewHolder{
+    static class ViewHolder {
 
         @BindView(R.id.user_icon)
         ImageView userIcon;
@@ -70,8 +70,6 @@ public class ReviewsAdapter extends BaseAdapter {
         TextView userName;
         @BindView(R.id.user_review)
         TextView userReview;
-        @BindView(R.id.user_rating)
-        RatingBar userRating;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
