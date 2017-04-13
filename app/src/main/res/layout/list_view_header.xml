@@ -38,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:drawablePadding="5dp"
             android:drawableStart="@drawable/ic_directions_black"
             android:gravity="center"
             android:text="CALLE Las Rozas 16" />
@@ -48,30 +49,63 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:drawablePadding="5dp"
             android:drawableStart="@drawable/ic_type_black"
             android:gravity="center"
             android:text="Centro Privado" />
 
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d5d5d5" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Formacion Profesional" />
-
-
-    <View
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:background="#d5d5d5" />
+        android:layout_height="150dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="OPINIONES" />
+        android:background="#ededed"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Valora este centro" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:scaleX="0.7"
+            android:scaleY="0.7" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Escribe una opinión breve" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Danos tu opinión" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:padding="16dp"
+            android:text="ENVIAR" />
+    </LinearLayout>
 
 
     <TextView
