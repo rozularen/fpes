@@ -56,25 +56,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        //bindear as vistas com o Butterknife
+
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         ButterKnife.bind(this, view);
 
         mapView.onCreate(savedInstanceState);
-
         mapView.onResume();
-
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         mapView.getMapAsync(this);
         final ArrayList<Double[]> coordArr = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -96,19 +94,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
 
-
         return view;
     }
 
 
-    public Double[] stringToCoord(String address){
+    public Double[] stringToCoord(String address) {
         Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
         Double lat = null, lon = null;
-        try
-        {
+        try {
             List<Address> addresses = geoCoder.getFromLocationName(address, 5);
-            if (addresses.size() > 0)
-            {
+            if (addresses.size() > 0) {
                 lat = (double) (addresses.get(0).getLatitude());
                 lon = (double) (addresses.get(0).getLongitude());
 
@@ -117,10 +112,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         /*used marker for show the location */
 
             }
-        }
-        catch (IOException e)
-        {
-            Log.d(TAG, "stringToCoord: "+e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "stringToCoord: " + e.getMessage());
         }
         return new Double[]{lat, lon};
     }

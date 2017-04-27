@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.squareup.picasso.Target;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,19 +14,22 @@ import java.util.Map;
  * Created by markc on 24/11/2016.
  */
 @IgnoreExtraProperties
-public class Centre implements Parcelable{
+public class Centre implements Parcelable {
 
+    public Target target;
     public String address;
-    public String uid;
+    public int id;
     public String province;
     public String city;
     public String nature;
-    public String type;
     public String municipality;
-    public int center_code;
-    public int postal_code;
     public String specific_den;
     public String generic_den;
+    public String thumbnail_url;
+    public float sum_ratings;
+    public int num_ratings;
+    public int postal_code;
+    public int num_reviews;
 
     public Centre() {
     }
@@ -35,20 +39,21 @@ public class Centre implements Parcelable{
         return super.toString();
     }
 
-    public Centre(String address, String uid, String province, String city, String nature,
-                  String type, String municipality, int center_code,
-                  int postal_code, String specific_den, String generic_den) {
-        this.uid = uid;
+    public Centre(String address, int uid, String province, String city, String nature,
+                  String municipality, String thumbnail_url,
+                  int postal_code, String specific_den, String generic_den, int num_ratings,int num_reviews) {
+        this.id = uid;
         this.address = address;
         this.province = province;
         this.city = city;
         this.nature = nature;
-        this.type = type;
+        this.thumbnail_url = thumbnail_url;
         this.municipality = municipality;
-        this.center_code = center_code;
         this.postal_code = postal_code;
         this.specific_den = specific_den;
         this.generic_den = generic_den;
+        this.num_ratings = num_ratings;
+        this.num_reviews = num_reviews;
     }
 
     public Centre(String s, String s1) {
@@ -57,16 +62,17 @@ public class Centre implements Parcelable{
     }
 
     protected Centre(Parcel in) {
-        uid = in.readString();
+        id = in.readInt();
         province = in.readString();
         city = in.readString();
         nature = in.readString();
-        type = in.readString();
         municipality = in.readString();
         specific_den = in.readString();
         generic_den = in.readString();
-        center_code = in.readInt();
+        thumbnail_url = in.readString();
         postal_code = in.readInt();
+        num_ratings = in.readInt();
+        num_reviews = in.readInt();
     }
 
     public static final Creator<Centre> CREATOR = new Creator<Centre>() {
@@ -85,16 +91,16 @@ public class Centre implements Parcelable{
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", uid);
+        result.put("id", id);
         result.put("province", province);
         result.put("city", city);
         result.put("nature", nature);
-        result.put("type", type);
         result.put("municipality", municipality);
-        result.put("center_code",center_code);
         result.put("specific_den", specific_den);
         result.put("generic_den", generic_den);
-
+        result.put("thumbnail_url", thumbnail_url);
+        result.put("num_reviews", num_reviews);
+        result.put("num_ratings", num_ratings);
         return result;
     }
 
@@ -105,16 +111,17 @@ public class Centre implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(uid);
+        dest.writeInt(id);
         dest.writeString(city);
         dest.writeString(province);
         dest.writeString(nature);
-        dest.writeString(type);
         dest.writeString(municipality);
         dest.writeString(specific_den);
         dest.writeString(generic_den);
-        dest.writeInt(center_code);
+        dest.writeInt(num_reviews);
+        dest.writeInt(num_ratings);
         dest.writeInt(postal_code);
+        dest.writeString(thumbnail_url);
     }
     // [END centre_to_map]
 }

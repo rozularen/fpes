@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.model.Review;
+import com.argandevteam.fpes.utils.CircleTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -53,24 +55,35 @@ public class ReviewsAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).
                     inflate(R.layout.review_item, parent, false);
         }
-        ReviewsAdapter.ViewHolder viewHolder = new ReviewsAdapter.ViewHolder(convertView);
-        // get current item to be displayed
-        Review currentItem = (Review) getItem(position);
-        viewHolder.userName.setText("Marcos Stival");
-//        viewHolder.userReview.setText(currentItem.text);
+        ReviewsAdapter.ViewHolder holder = new ReviewsAdapter.ViewHolder(convertView);
 
+        // get current item to be displayed
+        Review review = (Review) getItem(position);
+        holder.reviewText.setText(review.text);
+        holder.reviewRating.setRating(review.rating);
+        holder.reviewDate.setText(review.date);
+        if(review.user != null) {
+            Picasso.with(context).load(review.user.user_image)
+                    .placeholder(R.drawable.com_facebook_button_background)
+                    .fit()
+                    .transform(new CircleTransform())
+                    .into(holder.reviewUserIcon);
+        }
         return convertView;
     }
 
     static class ViewHolder {
 
-        @BindView(R.id.user_icon)
-        ImageView userIcon;
-        @BindView(R.id.user_name)
-        TextView userName;
-        @BindView(R.id.user_review)
-        TextView userReview;
-
+        @BindView(R.id.review_user_icon)
+        ImageView reviewUserIcon;
+        @BindView(R.id.review_user_name)
+        TextView reviewUserName;
+        @BindView(R.id.review_rating)
+        RatingBar reviewRating;
+        @BindView(R.id.review_text)
+        TextView reviewText;
+        @BindView(R.id.review_date)
+        TextView reviewDate;
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }

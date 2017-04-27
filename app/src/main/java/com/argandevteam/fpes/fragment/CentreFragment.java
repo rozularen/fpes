@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 
 import com.argandevteam.fpes.R;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +60,13 @@ public class CentreFragment extends Fragment {
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Firebase
         myList = new ArrayList<>();
         setHasOptionsMenu(true);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseDatabase instance = FirebaseDatabase.getInstance();
+        mDatabase = instance.getReference();
         mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -73,8 +74,8 @@ public class CentreFragment extends Fragment {
                     Centre centre = centreSnapshot.getValue(Centre.class);
                     myList.add(centre);
                 }
-
                 centreRecyclerAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -105,6 +106,7 @@ public class CentreFragment extends Fragment {
                 DetailsFragment detailsFragment = new DetailsFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("centre", myList.get(position));
+
                 detailsFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -140,7 +142,7 @@ public class CentreFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_search){
+        if (item.getItemId() == R.id.action_search) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.frame_layout, new SearchFragment());

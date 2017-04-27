@@ -9,5 +9,6 @@
     <color name="colorAccentDark">#00bfa5</color>
     <color name="colorAccentLight">#a7ffeb</color>
     <color name="colorAccentText">#000000</color>
-    <color name="cardTextColor">#FAFAFA</color>
+    <color name="cardTextColor">#000</color>
+    <color name="colorSecondary">#FAFAFA</color>
 </resources>

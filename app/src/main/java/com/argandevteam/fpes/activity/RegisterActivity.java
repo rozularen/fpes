@@ -109,7 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             User newUser = new User(task.getResult().getUser().getUid(), emailText.getText().toString(),
-                                    nameText.getText().toString(), task.getResult().getUser().getPhotoUrl());
+                                    nameText.getText().toString(), task.getResult().getUser().getPhotoUrl().toString());
                             mDatabase.push().setValue(newUser, new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {

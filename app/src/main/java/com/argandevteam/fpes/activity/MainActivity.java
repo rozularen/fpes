@@ -16,7 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
+    TextView drawerHeaderName;
     @BindView(R.id.navigation)
     NavigationView mDrawerList;
     @BindView(R.id.my_toolbar)
@@ -63,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
         ButterKnife.bind(this);
-
+        View header = mDrawerList.getHeaderView(0);
+        drawerHeaderName = (TextView) header.findViewById(R.id.drawer_header_name);
         setUpFirebase();
         setUpGoogleSignIn();
 
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null) {
-
+                    drawerHeaderName.setText(currentUser.getDisplayName());
                 } else {
                     Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(loginIntent);
@@ -165,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
             fragmentClass = CentreFragment.class;
         }
         try {
-            if(fragmentClass != null) {
+            if (fragmentClass != null) {
                 fragment = (Fragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
@@ -186,8 +190,8 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         }
     }
 
-    private void handleIntent(Intent intent){
-        if(Intent.ACTION_SEARCH.equals(intent.getAction())){
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             Log.d(TAG, "handleIntent: " + query);
         }

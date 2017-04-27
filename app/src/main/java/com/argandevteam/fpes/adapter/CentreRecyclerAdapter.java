@@ -1,15 +1,21 @@
 package com.argandevteam.fpes.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.fragment.CentreFragment.OnListFragmentInteractionListener;
 import com.argandevteam.fpes.model.Centre;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -32,7 +38,6 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
 
-
     public CentreRecyclerAdapter(Context context, List<Centre> items, OnListFragmentInteractionListener listener) {
         this.context = context;
         mValues = items;
@@ -51,14 +56,22 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Centre centre = mValues.get(position);
-        holder.specificDenText.setText(mValues.get(position).specific_den);
-        holder.addressText.setText(mValues.get(position).address);
-        //holder.provinceText.setText(mValues.get(position).province);
-        //holder.cityText.setText(mValues.get(position).municipality);
-        holder.typeText.setText(mValues.get(position).nature);
+
+        holder.centreSpecificDen.setText(centre.specific_den);
+        holder.centreAddress.setText(centre.address);
+        holder.centreNature.setText(centre.nature);
+        holder.centreNumReviews.setText(String.valueOf(centre.num_reviews));
+        holder.centreRating.setRating(calculateCentreAverageRating(centre));
+
+        Picasso.with(context).load(centre.thumbnail_url).fit().placeholder(R.drawable.com_facebook_button_background).centerCrop().into(holder.centreImage);
+
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
         mListener.onListFragmentInteraction(holder.centre);
+    }
+
+    private float calculateCentreAverageRating(Centre centre) {
+        return centre.sum_ratings / centre.num_ratings;
     }
 
     public void setOnItemClickListener(ItemClickListener listener) {
@@ -74,18 +87,25 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
 
         View mView;
         Centre centre;
-        @BindView(R.id.tSpecificDenomination)
-        TextView specificDenText;
-        @BindView(R.id.tType)
-        TextView typeText;
-        @BindView(R.id.commentsCount)
-        TextView commentsCount;
-        @BindView(R.id.tAddress)
-        TextView addressText;
-        /*@BindView(R.id.tProvince)
-        TextView provinceText;
-        @BindView(R.id.tCity)
-        TextView cityText;*/
+        Target target;
+
+        @BindView(R.id.centre_image)
+        ImageView centreImage;
+
+        @BindView(R.id.centre_specific_den)
+        TextView centreSpecificDen;
+
+        @BindView(R.id.centre_address)
+        TextView centreAddress;
+
+        @BindView(R.id.centre_rating)
+        RatingBar centreRating;
+
+        @BindView(R.id.centre_num_reviews)
+        TextView centreNumReviews;
+
+        @BindView(R.id.centre_nature)
+        TextView centreNature;
 
 
         ItemClickListener mListener;
