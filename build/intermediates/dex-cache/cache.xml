@@ -20,15 +20,6 @@
         <dex dex="D:\Proyectos\AndroidStudio\FPes\app\build\intermediates\pre-dexed\debug\classes_a6a5e0761121583b56ab4a2002f3cf8788da3c2e.jar" />
     </item>
     <item
-        is-multidex="true"
-        jar="C:\Users\markc\.android\build-cache\8fd8d7f7d4cc7cd4172d2f475e9da788c187d194\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="0d94c39080a309d1887f50ef68cc96dfe4bc9d01">
-        <dex dex="D:\Proyectos\AndroidStudio\FPes\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_97ebdd42064226e1eb02f8b114e4375451ea4525\classes.dex" />
-    </item>
-    <item
         is-multidex="false"
         jar="C:\Users\markc\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-tasks\1.4.0\d85884acf6810a3bbbecb587f239005cbc846dc4\bolts-tasks-1.4.0.jar"
         jumboMode="false"
@@ -36,6 +27,15 @@
         revision="25.0.2"
         sha1="d85884acf6810a3bbbecb587f239005cbc846dc4">
         <dex dex="D:\Proyectos\AndroidStudio\FPes\app\build\intermediates\pre-dexed\debug\bolts-tasks-1.4.0_d52792893e60300547f6562c35b05c7f27f8603c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\markc\.android\build-cache\8fd8d7f7d4cc7cd4172d2f475e9da788c187d194\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0d94c39080a309d1887f50ef68cc96dfe4bc9d01">
+        <dex dex="D:\Proyectos\AndroidStudio\FPes\app\build\intermediates\pre-dexed\debug\classes_97ebdd42064226e1eb02f8b114e4375451ea4525.jar" />
     </item>
     <item
         is-multidex="false"
@@ -126,15 +126,6 @@
         revision="25.0.2"
         sha1="150252b33b00274cc868578ade018fda0d43a3eb">
         <dex dex="D:\Proyectos\AndroidStudio\FPes\app\build\intermediates\pre-dexed\debug\classes_6aa2740a11f29f2af2809b3c1201c3503e75755a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\markc\.android\build-cache\dc351fd5b439bfb513d6e2b4bff1ca45a9cb2e07\output\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="6a70160a70685ce25bda1c6e094c73676a399039">
-        <dex dex="D:\Proyectos\AndroidStudio\FPes\app\build\intermediates\pre-dexed\debug\classes_d678f80b4fbc689ddc1808b62ed73b86fe62be34.jar" />
     </item>
     <item
         is-multidex="false"
@@ -286,7 +277,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="0305956397967a89d9b15ae7fe892926937d6775">
+        sha1="bd7b3deeccea141de5b1323b220441a87640b8f7">
         <dex dex="D:\Proyectos\AndroidStudio\FPes\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_bcbf15389df0087964d5fa34e6e601417918f0d1\classes.dex" />
     </item>
     <item

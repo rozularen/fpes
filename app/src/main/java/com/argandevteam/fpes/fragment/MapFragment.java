@@ -60,7 +60,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //bindear as vistas com o Butterknife
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
@@ -74,43 +73,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             e.printStackTrace();
         }
         mapView.getMapAsync(this);
-        final ArrayList<Double[]> coordArr = new ArrayList<>();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot centreSnapshot : dataSnapshot.getChildren()) {
-                    Centre centre = centreSnapshot.getValue(Centre.class);
-                    coordArr.add(stringToCoord(centre.address));
+       mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                    Log.d(TAG, "onDataChange: " + centreSnapshot.getValue());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
 
         return view;
     }
 
 
-    public Double[] stringToCoord(String address) {
+    public Double[] stringToCoord(List<Centre> centres) {
         Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
         Double lat = null, lon = null;
         try {
-            List<Address> addresses = geoCoder.getFromLocationName(address, 5);
-            if (addresses.size() > 0) {
-                lat = (double) (addresses.get(0).getLatitude());
-                lon = (double) (addresses.get(0).getLongitude());
+            for(Centre centre: centres) {
+                String address = centre.address + " " + centre.municipality + " " + centre.province;
+                List<Address> addresses = geoCoder.getFromLocationName(address, 5);
+                if (addresses.size() > 0) {
+                    lat = (double) (addresses.get(0).getLatitude());
+                    lon = (double) (addresses.get(0).getLongitude());
 
-                Log.d("lat-long", "" + lat + "......." + lon);
-                final LatLng user = new LatLng(lat, lon);
-        /*used marker for show the location */
-
+                    Log.d("lat-long", "" + lat + "......." + lon);
+                    final LatLng user = new LatLng(lat, lon);
+                    /*used marker for show the location */
+                    mDatabase.child("centres").child(String.valueOf(centre.id-1)).child("lat").setValue(lat);
+                    mDatabase.child("centres").child(String.valueOf(centre.id-1)).child("lon").setValue(lon);
+                }
             }
         } catch (IOException e) {
             Log.d(TAG, "stringToCoord: " + e.getMessage());
@@ -119,9 +106,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         map = googleMap;
+        myList = new ArrayList<Centre>();
+        final ArrayList<Double[]> coordArr = new ArrayList<>();
 
+        mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot centreSnapshot : dataSnapshot.getChildren()) {
+                    Centre centre = centreSnapshot.getValue(Centre.class);
+                    myList.add(centre);
+                    Log.d(TAG, "onDataChange: " + centreSnapshot.getValue());
+                    map.addMarker(new MarkerOptions()
+                            .position(new LatLng(centre.lat, centre.lon))
+                            .title(centre.specific_den));
+                }
+            //    coordArr.add(stringToCoord(myList));
 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

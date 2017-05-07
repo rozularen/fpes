@@ -125,14 +125,15 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         });
     }
 
+
+
     private void setUpListView(LayoutInflater inflater, Bundle savedInstanceState) {
-        ratingBar = (RatingBar) listViewHeader.findViewById(R.id.centre_rating);
-        reviewEditText = (EditText) listViewHeader.findViewById(R.id.centre_user_review);
+        ratingBar = (RatingBar) listViewHeader.findViewById(R.id.user_rating);
+        reviewEditText = (EditText) listViewHeader.findViewById(R.id.user_review);
         btnSend = (TextView) listViewHeader.findViewById(R.id.btnSend);
         numReviews = (TextView) listViewHeader.findViewById(R.id.centre_num_reviews);
         centreImage = (ImageView) listViewHeader.findViewById(R.id.centre_image);
         centreSpecificDen = (TextView) listViewHeader.findViewById(R.id.centre_specific_den);
-
         Picasso.with(getContext()).load(centre.thumbnail_url)
                 .fit()
                 .placeholder(R.drawable.com_facebook_button_background)
@@ -142,7 +143,7 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         btnSend.setOnClickListener(this);
         ratingBar.setRating(centre.sum_ratings / centre.num_ratings);
         numReviews.setText(String.valueOf(centre.num_reviews));
-
+        centreSpecificDen.setText(centre.specific_den);
         lvReview.addHeaderView(listViewHeader);
 
         initializeMaps(savedInstanceState, listViewHeader);
@@ -182,7 +183,7 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         String reviewText = reviewEditText.getText().toString();
         final float rating = ratingBar.getRating();
         User user = new User(currentUser.getUid(), currentUser.getEmail(), currentUser.getDisplayName(), currentUser.getPhotoUrl().toString());
-        String date = DateFormat.getInstance().format(new Date());
+        String date = DateFormat.getInstance().format(new Date()).split(" ")[0];
 
         final Review review = new Review(user, rating, reviewText, date);
 
@@ -205,7 +206,7 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
 //            public void onComplete(DatabaseError databaseError, boolean success, DataSnapshot dataSnapshot) {
 //                // Analyse databaseError for any error during increment
 //                Log.d(TAG, "postTransaction:onComplete: " + databaseError);
-//                centreRef.child("reviews").push().setValue(review);
+////                centreRef.child("reviews").push().setValue(review);
 //
 //            }
 //        });

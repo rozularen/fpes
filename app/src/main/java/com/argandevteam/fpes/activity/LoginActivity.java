@@ -9,9 +9,13 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,6 +51,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -113,8 +120,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onError(FacebookException exception) {
                         // App code
-                        Toast.makeText(LoginActivity.this, "FAIL", Toast.LENGTH_SHORT).show();
-                        Log.d("---------------------", exception.toString());
+                        Toast.makeText(LoginActivity.this, "prueba"+exception.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -237,7 +243,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.signup_button:
+            case R.id.link_signup:
                 Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(registerIntent);
                 break;

@@ -19,6 +19,8 @@ public class Centre implements Parcelable {
     public Target target;
     public String address;
     public int id;
+    public double lat;
+    public double lon;
     public String province;
     public String city;
     public String nature;
@@ -41,7 +43,7 @@ public class Centre implements Parcelable {
 
     public Centre(String address, int uid, String province, String city, String nature,
                   String municipality, String thumbnail_url,
-                  int postal_code, String specific_den, String generic_den, int num_ratings,int num_reviews) {
+                  int postal_code, String specific_den, String generic_den, int num_ratings,int num_reviews, double lat, double lon) {
         this.id = uid;
         this.address = address;
         this.province = province;
@@ -54,6 +56,8 @@ public class Centre implements Parcelable {
         this.generic_den = generic_den;
         this.num_ratings = num_ratings;
         this.num_reviews = num_reviews;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     public Centre(String s, String s1) {
@@ -101,6 +105,8 @@ public class Centre implements Parcelable {
         result.put("thumbnail_url", thumbnail_url);
         result.put("num_reviews", num_reviews);
         result.put("num_ratings", num_ratings);
+        result.put("lat", lat);
+        result.put("lon", lon);
         return result;
     }
 
@@ -122,6 +128,8 @@ public class Centre implements Parcelable {
         dest.writeInt(num_ratings);
         dest.writeInt(postal_code);
         dest.writeString(thumbnail_url);
+        dest.writeDouble(lat);
+        dest.writeDouble(lon);
     }
     // [END centre_to_map]
 }

@@ -12,7 +12,8 @@
         tools:context="com.argandevteam.fpes.fragment.ProfileFragment">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:id="@+id/profile_user_image"
+            android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
             android:src="@mipmap/ic_launcher" />
@@ -31,6 +32,7 @@
             android:background="#d5d5d5" />
 
         <TextView
+            android:id="@+id/profile_user_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

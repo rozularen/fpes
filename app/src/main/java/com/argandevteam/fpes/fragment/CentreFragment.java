@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 
 import com.argandevteam.fpes.R;
@@ -45,6 +46,8 @@ import butterknife.ButterKnife;
 public class CentreFragment extends Fragment {
 
     private static final String TAG = "CentreFragment";
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     @BindView(R.id.lvCentres)
     RecyclerView recyclerView;
     private OnListFragmentInteractionListener mListener;
@@ -59,6 +62,11 @@ public class CentreFragment extends Fragment {
     public CentreFragment() {
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+//        progressBar.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +83,8 @@ public class CentreFragment extends Fragment {
                     myList.add(centre);
                 }
                 centreRecyclerAdapter.notifyDataSetChanged();
-
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override

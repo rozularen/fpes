@@ -27,6 +27,7 @@ import com.argandevteam.fpes.fragment.MapFragment;
 import com.argandevteam.fpes.fragment.ProfileFragment;
 import com.argandevteam.fpes.model.Centre;
 import com.facebook.CallbackManager;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -150,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     FirebaseAuth.getInstance().signOut();
-                    //Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                    //LoginManager.getInstance().logOut();
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+                    LoginManager.getInstance().logOut();
 
                 }
             }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -168,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         } else {
             fragmentClass = CentreFragment.class;
         }
+
         try {
             if (fragmentClass != null) {
                 fragment = (Fragment) fragmentClass.newInstance();
