@@ -11,4 +11,5 @@
     <color name="colorAccentText">#000000</color>
     <color name="cardTextColor">#000</color>
     <color name="colorSecondary">#FAFAFA</color>
+    <color name="white">#FFFFFF</color>
 </resources>

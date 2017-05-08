@@ -1,0 +1,8 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/circle_outline" />
+    <item android:drawable="@drawable/ic_camera_alt_black_24dp"
+
+        android:width="20dp"
+        android:height="20dp"
+        android:gravity="center_horizontal|center_vertical"/>
+</layer-list>

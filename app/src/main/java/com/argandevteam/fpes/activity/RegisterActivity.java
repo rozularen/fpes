@@ -1,5 +1,6 @@
 package com.argandevteam.fpes.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -35,6 +38,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private final static String TAG = "RegisterActivity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    @BindView(R.id.user_photo_container)
+    LinearLayout luserPhotoContainer;
 
     @BindView(R.id.name_input_layout)
     TextInputLayout nameLayout;
@@ -57,17 +63,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     Button signUpButton;
 
     private DatabaseReference mDatabase;
+    private String name, email, password;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
-
+        activity = this;
         setUpFirebase();
 
         loginLink.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
+        luserPhotoContainer.setOnClickListener(this);
     }
 
     ;
@@ -95,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         };
     }
 
-    private void firebaseCreateAccount(String email, String password) {
+    private void firebaseCreateAccount(final String userName, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -107,18 +116,36 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Toast.makeText(RegisterActivity.this, "fallo",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            User newUser = new User(task.getResult().getUser().getUid(), emailText.getText().toString(),
-                                    nameText.getText().toString(), task.getResult().getUser().getPhotoUrl().toString());
-                            mDatabase.push().setValue(newUser, new DatabaseReference.CompletionListener() {
+                            final User newUser = new User(task.getResult().getUser().getUid(), emailText.getText().toString(),
+                                    nameText.getText().toString(), null);
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(userName)
+                                    .build();
+
+                            task.getResult().getUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                    if (databaseError != null) {
-                                        System.out.println("Data could not be saved " + databaseError.getMessage());
-                                    } else {
-                                        System.out.println("Data saved successfully.");
-                                    }
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    mDatabase.push().setValue(newUser, new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                            if (databaseError != null) {
+                                                System.out.println("Data could not be saved " + databaseError.getMessage());
+
+                                            } else {
+                                                System.out.println("Data saved successfully.");
+                                                Intent signUpIntent = new Intent(activity, MainActivity.class);
+                                                startActivity(signUpIntent);
+                                            }
+                                        }
+                                    });
                                 }
                             });
+
+
+
+
+
                         }
                     }
                 });
@@ -128,41 +155,62 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.signup_button:
-                validateInput(nameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString());
+                name = nameText.getText().toString();
+                email = emailText.getText().toString();
+                password = passwordText.getText().toString();
+                if (validateInput(name, email, password)) {
+                    firebaseCreateAccount(name, email, password);
+                } else {
+                    Toast.makeText(this, "No se pudo registrar", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.link_login:
                 Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
                 finish();
                 break;
+            case R.id.user_photo_container:
+                setUserPhoto();
             default:
                 break;
         }
     }
 
-    private void validateInput(String userName, String email, String password) {
+    private void setUserPhoto() {
+        Toast.makeText(activity, "Te voy a coger", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean validateInput(String userName, String email, String password) {
+        boolean isValidInput = true;
         String errorMessage = null;
         if (TextUtils.isEmpty(userName)) {
             errorMessage = "Introduzca nombre de usuario";
+            isValidInput = false;
         }
         toggleTextInputLayoutError(nameLayout, errorMessage);
 
         if (TextUtils.isEmpty(email)) {
             errorMessage = "Introduzca email";
+            isValidInput = false;
+
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             errorMessage = "Email no valido";
+            isValidInput = false;
+
         }
         toggleTextInputLayoutError(emailLayout, errorMessage);
 
         if (TextUtils.isEmpty(password)) {
             errorMessage = "Introduzca contraseña";
+            isValidInput = false;
         } else if (password.length() < 6) {
             errorMessage = "Minimo 6 caracteres";
+            isValidInput = false;
         }
         toggleTextInputLayoutError(passwordLayout, errorMessage);
 
         clearFocus();
-
+        return isValidInput;
     }
 
     /**

@@ -60,6 +60,7 @@ public class CentreFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public CentreFragment() {
+
     }
 
     @Override
@@ -141,6 +142,7 @@ public class CentreFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
+
     }
 
     @Override
