@@ -1,11 +1,16 @@
 package com.argandevteam.fpes.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,22 +30,32 @@ import com.google.firebase.database.FirebaseDatabase;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "RegisterActivity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    @BindView(R.id.name_input_layout)
+    TextInputLayout nameLayout;
+    @BindView(R.id.email_input_layout)
+    TextInputLayout emailLayout;
+    @BindView(R.id.password_input_layout)
+    TextInputLayout passwordLayout;
+
     @BindView(R.id.ainput_email)
-    EditText emailText;
+    TextInputEditText emailText;
     @BindView(R.id.ainput_password)
-    EditText passwordText;
+    TextInputEditText passwordText;
     @BindView(R.id.ainput_name)
-    EditText nameText;
+    TextInputEditText nameText;
+
     @BindView(R.id.link_login)
     TextView loginLink;
+
     @BindView(R.id.signup_button)
     Button signUpButton;
+
     private DatabaseReference mDatabase;
 
     @Override
@@ -48,27 +63,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
+
         setUpFirebase();
-        loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(loginIntent);
-                finish();
-            }
-        });
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("-----------", "Button clicked");
 
-
-
-                firebaseCreateAccount(emailText.getText().toString(), passwordText.getText().toString());
-
-
-            }
-        });
+        loginLink.setOnClickListener(this);
+        signUpButton.setOnClickListener(this);
     }
 
     ;
@@ -103,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                         if (!task.isSuccessful()) {
-                            Log.d("Gasdasda",task.getException().getMessage());
+                            Log.d("Gasdasda", task.getException().getMessage());
 
                             Toast.makeText(RegisterActivity.this, "fallo",
                                     Toast.LENGTH_SHORT).show();
@@ -125,7 +124,69 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void addUserToDatabase(String email, String password) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.signup_button:
+                validateInput(nameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString());
+                break;
+            case R.id.link_login:
+                Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
 
+    private void validateInput(String userName, String email, String password) {
+        String errorMessage = null;
+        if (TextUtils.isEmpty(userName)) {
+            errorMessage = "Introduzca nombre de usuario";
+        }
+        toggleTextInputLayoutError(nameLayout, errorMessage);
+
+        if (TextUtils.isEmpty(email)) {
+            errorMessage = "Introduzca email";
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errorMessage = "Email no valido";
+        }
+        toggleTextInputLayoutError(emailLayout, errorMessage);
+
+        if (TextUtils.isEmpty(password)) {
+            errorMessage = "Introduzca contraseña";
+        } else if (password.length() < 6) {
+            errorMessage = "Minimo 6 caracteres";
+        }
+        toggleTextInputLayoutError(passwordLayout, errorMessage);
+
+        clearFocus();
+
+    }
+
+    /**
+     * Display/hides TextInputLayout error.
+     *
+     * @param msg the message, or null to hide
+     */
+    private static void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
+                                                   String msg) {
+        textInputLayout.setError(msg);
+        if (msg == null) {
+            textInputLayout.setErrorEnabled(false);
+        } else {
+            textInputLayout.setErrorEnabled(true);
+        }
+    }
+
+    private void clearFocus() {
+        View view = this.getCurrentFocus();
+        if (view != null && view instanceof EditText) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
+                    .INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            view.clearFocus();
+        }
     }
 }
