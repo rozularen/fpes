@@ -4,6 +4,7 @@ package com.argandevteam.fpes.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,6 +15,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -52,7 +55,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = "MapFragment";
     private static final int MY_PERMISSIONS_LOCATION = 1;
@@ -205,7 +208,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         myList = new ArrayList<Centre>();
         final ArrayList<Double[]> coordArr = new ArrayList<>();
-
+        map.setOnInfoWindowClickListener(this);
         mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -213,9 +216,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     Centre centre = centreSnapshot.getValue(Centre.class);
                     myList.add(centre);
                     Log.d(TAG, "onDataChange: " + centreSnapshot.getValue());
-                    map.addMarker(new MarkerOptions()
+                    Marker marker = map.addMarker(new MarkerOptions()
                             .position(new LatLng(centre.lat, centre.lon))
+                            .snippet("Dirección: " + centre.address)
                             .title(centre.specific_den));
+                    marker.setTag(centre);
+
                 }
                 LatLng coordinate = new LatLng(40.4212748, -3.7523294);
                 CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 8.5f);
@@ -261,5 +267,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Centre centreMarker = (Centre) marker.getTag();
+
+        DetailsFragment detailsFragment = new DetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("centre", centreMarker);
+
+        detailsFragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_layout, detailsFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
