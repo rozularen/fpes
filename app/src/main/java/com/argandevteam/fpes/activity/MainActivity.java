@@ -1,6 +1,7 @@
 package com.argandevteam.fpes.activity;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,14 +19,18 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.argandevteam.fpes.CustomLinearLayout;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.fragment.CentreFragment;
 import com.argandevteam.fpes.fragment.MapFragment;
 import com.argandevteam.fpes.fragment.ProfileFragment;
 import com.argandevteam.fpes.model.Centre;
+import com.argandevteam.fpes.utils.CircleTransform;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -36,9 +41,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.database.DatabaseReference;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 public class MainActivity extends AppCompatActivity implements CentreFragment.OnListFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
 
@@ -47,15 +54,21 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
-
+    private MainActivity activity;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
+
+    CustomLinearLayout customLinearLayout;
     TextView drawerHeaderName;
+    ImageView drawerUserPhoto;
+
     @BindView(R.id.navigation)
     NavigationView mDrawerList;
+
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
+
     @BindView(R.id.frame_layout)
     FrameLayout frameLayout;
 
@@ -67,8 +80,13 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
         ButterKnife.bind(this);
+
+        activity = this;
         View header = mDrawerList.getHeaderView(0);
+        customLinearLayout = (CustomLinearLayout) header.findViewById(R.id.custom_linear_layout);
         drawerHeaderName = (TextView) header.findViewById(R.id.drawer_header_name);
+        drawerUserPhoto = (ImageView) header.findViewById(R.id.drawer_user_icon);
+
         setUpFirebase();
         setUpGoogleSignIn();
 
@@ -81,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null) {
                     drawerHeaderName.setText(currentUser.getDisplayName());
+                    Picasso.with(activity).load(currentUser.getPhotoUrl()).fit().transform(new CircleTransform()).into(drawerUserPhoto);
+                    Picasso.with(activity).load(currentUser.getPhotoUrl()).transform(new BlurTransformation(activity)).into(customLinearLayout);
                 } else {
                     Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(loginIntent);

@@ -1,28 +1,31 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.argandevteam.fpes.CustomLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="190dp"
     android:background="#6d6d6d"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/drawer_user_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="23dp"
-        android:layout_marginStart="25dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/drawer_header_name"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/drawer_user_icon"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="10dp"
-        android:textColor="#FAFAFA"
-        android:layout_toEndOf="@+id/drawer_user_icon"
-        android:text="Marcos Stival"
-        android:textSize="24dp" />
-</RelativeLayout>
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="120dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/drawer_user_icon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/drawer_header_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Marcos Stival"
+            android:textColor="#FAFAFA"
+            android:textSize="24dp" />
+    </LinearLayout>
+</com.argandevteam.fpes.CustomLinearLayout>
