@@ -59,19 +59,21 @@ public class ReviewsAdapter extends BaseAdapter {
         ReviewsAdapter.ViewHolder holder = new ReviewsAdapter.ViewHolder(convertView);
         // get current item to be displayed
         Review review = (Review) getItem(position);
-        if(review != null) {
-            User user = review.user;
-
-            holder.reviewUserName.setText(user.name);
-            holder.reviewText.setText(review.text);
-            holder.reviewRating.setRating(review.rating);
-            holder.reviewDate.setText(review.date);
+        if (review != null) {
+            User user = null;
             if (review.user != null) {
+                user = review.user;
+                holder.reviewUserName.setText(user.name);
                 Picasso.with(context).load(review.user.user_image)
                         .fit()
                         .transform(new CircleTransform())
                         .into(holder.reviewUserIcon);
+
             }
+
+            holder.reviewText.setText(review.text);
+            holder.reviewRating.setRating(review.rating);
+            holder.reviewDate.setText(review.date);
         }
         return convertView;
     }

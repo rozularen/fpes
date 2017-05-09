@@ -39,8 +39,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    @BindView(R.id.user_photo_container)
-    LinearLayout luserPhotoContainer;
+//    @BindView(R.id.user_photo_container)
+//    LinearLayout luserPhotoContainer;
 
     @BindView(R.id.name_input_layout)
     TextInputLayout nameLayout;
@@ -76,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         loginLink.setOnClickListener(this);
         signUpButton.setOnClickListener(this);
-        luserPhotoContainer.setOnClickListener(this);
+        //luserPhotoContainer.setOnClickListener(this);
     }
 
     ;

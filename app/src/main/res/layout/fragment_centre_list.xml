@@ -17,6 +17,7 @@
         android:layout_gravity="center"/>
 
     <android.support.v7.widget.RecyclerView
+        android:background="@color/list_background"
         android:id="@+id/lvCentres"
         android:name="com.argandevteam.fpes.fragment.CentreFragment"
         android:layout_width="match_parent"
