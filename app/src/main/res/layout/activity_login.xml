@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -22,7 +22,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -30,12 +30,13 @@
 
             <!-- Email Label -->
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/email_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -45,12 +46,13 @@
 
             <!-- Password Label -->
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/password_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,9 +68,9 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/login_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:layout_marginTop="16dp"
@@ -77,25 +79,31 @@
                 android:text="Login"
                 android:textColor="@color/white" />
 
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/sign_in_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
 
-            <com.facebook.login.widget.LoginButton
+            <Button
                 android:id="@+id/fb_login_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
-                android:layout_marginTop="30dp" />
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/blue_round_button"
+                android:text="Login Facebook"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/google_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/red_round_button"
+                android:text="Sign in with Google"
+                android:textColor="@color/white" />
+
 
             <TextView
                 android:id="@+id/link_signup"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:text="No account yet? Create one"
                 android:textSize="16dip" />

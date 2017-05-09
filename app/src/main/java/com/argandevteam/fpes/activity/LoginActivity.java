@@ -13,6 +13,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -54,6 +56,7 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,18 +76,29 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final int RC_SIGN_IN_GOOGLE = 1;
 
     CallbackManager mCallbackManager;
-    @BindView(R.id.fb_login_button)
-    LoginButton fbLoginButton;
-    @BindView(R.id.sign_in_button)
-    SignInButton googleLoginButton;
+
+    @BindView(R.id.email_input_layout)
+    TextInputLayout emailInputLayout;
+    @BindView(R.id.password_input_layout)
+    TextInputLayout passwordInputLayout;
+
     @BindView(R.id.input_email)
-    EditText emailText;
+    TextInputEditText emailText;
     @BindView(R.id.input_password)
-    EditText passwordText;
+    TextInputEditText passwordText;
+
     @BindView(R.id.login_button)
     Button loginButton;
+    @BindView(R.id.google_login_button)
+    Button googleLoginButton;
+    @BindView(R.id.fb_login_button)
+    Button fbLogin;
+
     @BindView(R.id.link_signup)
     TextView signupLink;
+
+//    @BindView(R.id.sign_in_button)
+//    SignInButton googleLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +114,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         signupLink.setOnClickListener(this);
         googleLoginButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
+        fbLogin.setOnClickListener(this);
 
-        fbLoginButton.setReadPermissions("email", "public_profile");
         mCallbackManager = CallbackManager.Factory.create();
         mLoginManager.registerCallback(mCallbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -217,6 +231,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
+    private static void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
+                                                   String msg) {
+        textInputLayout.setError(msg);
+        if (msg == null) {
+            textInputLayout.setErrorEnabled(false);
+        } else {
+            textInputLayout.setErrorEnabled(true);
+        }
+    }
+
     private AuthCredential getCredential(GoogleSignInAccount acct) {
         return GoogleAuthProvider.getCredential(acct.getIdToken(), null);
     }
@@ -247,13 +271,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(registerIntent);
                 break;
-            case R.id.sign_in_button:
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, 1);
-                break;
-            case R.id.fb_login_button:
+//            case R.id.sign_in_button:
+//                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+//                startActivityForResult(signInIntent, 1);
+//                break;
+            case R.id.login_button:
                 signInEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString());
                 break;
+            case R.id.fb_login_button:
+                mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+                break;
+            case R.id.google_login_button:
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, 1);
             default:
                 break;
         }

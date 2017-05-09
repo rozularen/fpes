@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 public class ProfileFragment extends Fragment {
 
 
-    @BindView(R.id.profile_user_image)
+    @BindView(R.id.user_photo_view)
     ImageView profileUserImage;
     @BindView(R.id.profile_user_name)
     TextView profileUserName;
