@@ -24,6 +24,7 @@ import android.widget.ScrollView;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.adapter.CentreRecyclerAdapter;
 import com.argandevteam.fpes.model.Centre;
+import com.argandevteam.fpes.model.Review;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,8 +53,9 @@ public class CentreFragment extends Fragment {
     RecyclerView recyclerView;
     private OnListFragmentInteractionListener mListener;
     private List<Centre> myList;
-    private DatabaseReference mDatabase;
     CentreRecyclerAdapter centreRecyclerAdapter;
+    private DatabaseReference mDatabase;
+    private DatabaseReference centresReviewsRef;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -76,16 +78,42 @@ public class CentreFragment extends Fragment {
         setHasOptionsMenu(true);
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
         mDatabase = instance.getReference();
+        centresReviewsRef = mDatabase.child("centres-reviews");
+
         mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot centreSnapshot : dataSnapshot.getChildren()) {
                     Centre centre = centreSnapshot.getValue(Centre.class);
+                    calculateCentreAverageRating(centre);
                     myList.add(centre);
                 }
                 centreRecyclerAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void calculateCentreAverageRating(final Centre centre) {
+//        List<String> reviewsKeys = new ArrayList<>();
+//        for(Map.Entry<String, Boolean> entry : centre.reviews.entrySet()){
+//            reviewsKeys.add(entry.getKey());
+//        }
+        centresReviewsRef.child(String.valueOf(centre.id - 1)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot reviewSnapshot : dataSnapshot.getChildren()) {
+                    Review review = reviewSnapshot.getValue(Review.class);
+                    centre.sum_ratings += review.rating;
+                    centre.num_ratings++;
+                }
+                centre.rating_average = centre.sum_ratings / centre.num_ratings;
             }
 
             @Override

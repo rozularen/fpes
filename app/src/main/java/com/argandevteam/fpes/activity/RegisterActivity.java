@@ -116,8 +116,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Toast.makeText(RegisterActivity.this, "fallo",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            final User newUser = new User(task.getResult().getUser().getUid(), emailText.getText().toString(),
-                                    nameText.getText().toString(), null);
+                            final User newUser = new User(task.getResult().getUser().getUid(),
+                                    emailText.getText().toString(),
+                                    nameText.getText().toString(),
+                                    "https://firebasestorage.googleapis.com/v0/b/fpes-156817.appspot.com/o/default-user.png?alt=media&token=0db5e75d-cf2c-4112-9a95-fa7655e3b890");
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(userName)
@@ -218,7 +220,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      *
      * @param msg the message, or null to hide
      */
-    private static void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
+    private void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
                                                    String msg) {
         textInputLayout.setError(msg);
         if (msg == null) {

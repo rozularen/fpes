@@ -11,18 +11,16 @@
             android:id="@+id/nav_map"
             android:icon="@mipmap/ic_place"
             android:title="Mapa" />
-    </group>
-    <item android:title="Cuenta">
-        <menu>
-            <item
-                android:id="@+id/nav_profile"
-                android:icon="@mipmap/ic_profile"
-                android:title="Perfil" />
-            <item
-                android:icon="@drawable/ic_log_off"
 
-                android:id="@+id/nav_log_out"
-                android:title="Cerrar Sesión" />
-        </menu>
-    </item>
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@mipmap/ic_profile"
+            android:title="Perfil" />
+        <item
+            android:id="@+id/nav_log_out"
+
+            android:icon="@drawable/ic_log_off"
+            android:title="Cerrar Sesión" />
+    </group>
+
 </menu>

@@ -1,14 +1,18 @@
 package com.argandevteam.fpes.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.model.User;
+import com.argandevteam.fpes.utils.Constants;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -17,9 +21,11 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -69,7 +75,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth mAuth;
     private LoginManager mLoginManager;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private DatabaseReference mDatabase;
+    private DatabaseReference userRef;
     private AuthCredential fbCredential;
     private AuthCredential googleCredential;
 
@@ -96,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @BindView(R.id.link_signup)
     TextView signupLink;
+    private SharedPreferences sharedPreferences;
 
 //    @BindView(R.id.sign_in_button)
 //    SignInButton googleLoginButton;
@@ -106,6 +114,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        sharedPreferences = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
+
+
         mAuth = FirebaseAuth.getInstance();
         mLoginManager = LoginManager.getInstance();
 
@@ -115,6 +126,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         googleLoginButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
         fbLogin.setOnClickListener(this);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        userRef = mDatabase.child("users");
 
         mCallbackManager = CallbackManager.Factory.create();
         mLoginManager.registerCallback(mCallbackManager,
@@ -134,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onError(FacebookException exception) {
                         // App code
-                        Toast.makeText(LoginActivity.this, "prueba"+exception.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "prueba" + exception.toString(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -186,12 +200,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     Log.w(TAG, "signInWithCredential", task.getException());
                     Toast.makeText(LoginActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
+                }else{
+                    if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
+                        addUser(task.getResult().getUser());
+                        sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
+                    }
                 }
             }
         });
     }
 
+    private void addUser(FirebaseUser user) {
+        User newUser = new User(user.getUid(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
+        userRef.child(user.getUid()).setValue(newUser);
+    }
+
     private void signInEmailAndPassword(String email, String password) {
+
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -205,8 +231,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.w(TAG, "signInWithEmail:failed", task.getException());
                             Toast.makeText(LoginActivity.this, "Nopeee",
                                     Toast.LENGTH_SHORT).show();
+                        }else{
+                            if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
+                                addUser(task.getResult().getUser());
+                                sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
+                            }
                         }
-
                         // ...
                     }
                 });
@@ -276,7 +306,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 //                startActivityForResult(signInIntent, 1);
 //                break;
             case R.id.login_button:
-                signInEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString());
+                if (validateInput(emailText.getText().toString(), passwordText.getText().toString())) {
+                    signInEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString());
+                }
                 break;
             case R.id.fb_login_button:
                 mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
@@ -286,6 +318,43 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 startActivityForResult(signInIntent, 1);
             default:
                 break;
+        }
+    }
+
+    private boolean validateInput(String email, String password) {
+        boolean isValidInput = true;
+        String errorMessage = null;
+        if (TextUtils.isEmpty(email)) {
+            errorMessage = "Introduzca email";
+            isValidInput = false;
+        }
+        setError(emailInputLayout, errorMessage);
+        if (TextUtils.isEmpty(password)) {
+            errorMessage = "Introduzca contraseña";
+            isValidInput = false;
+        }
+        setError(passwordInputLayout, errorMessage);
+        clearFocus();
+        return isValidInput;
+    }
+
+    private void setError(@NonNull TextInputLayout textInputLayout,
+                          String msg) {
+        textInputLayout.setError(msg);
+        if (msg == null) {
+            textInputLayout.setErrorEnabled(false);
+        } else {
+            textInputLayout.setErrorEnabled(true);
+        }
+    }
+
+    private void clearFocus() {
+        View view = this.getCurrentFocus();
+        if (view != null && view instanceof EditText) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
+                    .INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            view.clearFocus();
         }
     }
 }

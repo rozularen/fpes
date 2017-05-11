@@ -14,10 +14,18 @@ import android.widget.TextView;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.fragment.CentreFragment.OnListFragmentInteractionListener;
 import com.argandevteam.fpes.model.Centre;
+import com.argandevteam.fpes.model.Review;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,11 +45,16 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
     private final List<Centre> mValues;
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
+    private DatabaseReference mDatabase;
+    private DatabaseReference centresReviewsRef;
+
 
     public CentreRecyclerAdapter(Context context, List<Centre> items, OnListFragmentInteractionListener listener) {
         this.context = context;
         mValues = items;
         mListener = listener;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        centresReviewsRef = mDatabase.child("centres-reviews");
     }
 
     @Override
@@ -60,8 +73,8 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
         holder.centreSpecificDen.setText(centre.specific_den);
         holder.centreAddress.setText(centre.address);
         holder.centreNature.setText(centre.nature);
-        holder.centreNumReviews.setText(String.valueOf(centre.num_reviews));
-        holder.centreRating.setRating(calculateCentreAverageRating(centre));
+        holder.centreNumReviews.setText(centre.reviews != null ? String.valueOf(centre.reviews.size()) : "0");
+        holder.centreRating.setRating(centre.rating_average);
 
         Picasso.with(context).load(centre.thumbnail_url).fit().placeholder(R.drawable.com_facebook_button_background).centerCrop().into(holder.centreImage);
 
@@ -70,9 +83,7 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
         mListener.onListFragmentInteraction(holder.centre);
     }
 
-    private float calculateCentreAverageRating(Centre centre) {
-        return centre.sum_ratings / centre.num_ratings;
-    }
+
 
     public void setOnItemClickListener(ItemClickListener listener) {
         this.listener = listener;

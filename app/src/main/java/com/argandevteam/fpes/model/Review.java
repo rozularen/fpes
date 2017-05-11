@@ -1,10 +1,6 @@
 package com.argandevteam.fpes.model;
 
-import android.widget.ImageView;
-
 import com.google.firebase.database.IgnoreExtraProperties;
-
-import java.util.Date;
 
 /**
  * Created by markc on 30/03/2017.
@@ -12,6 +8,7 @@ import java.util.Date;
 @IgnoreExtraProperties
 public class Review {
     public User user;
+    public String user_uid;
     public float rating;
     public String text;
     public String date;
@@ -36,6 +33,13 @@ public class Review {
         this.user = user;
         this.rating = rating;
         this.text = reviewText;
+        this.date = date;
+    }
+
+    public Review(String user_uid, float rating, String text, String date) {
+        this.user_uid = user_uid;
+        this.rating = rating;
+        this.text = text;
         this.date = date;
     }
 

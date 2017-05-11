@@ -8,6 +8,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.squareup.picasso.Target;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +33,9 @@ public class Centre implements Parcelable {
     public int num_ratings;
     public int postal_code;
     public int num_reviews;
+//    public List<HashMap<String, Boolean>> reviews;
+    public HashMap<String, Boolean> reviews;
+    public float rating_average ;
 
     public Centre() {
     }
@@ -43,7 +47,7 @@ public class Centre implements Parcelable {
 
     public Centre(String address, int uid, String province, String city, String nature,
                   String municipality, String thumbnail_url,
-                  int postal_code, String specific_den, String generic_den, int num_ratings,int num_reviews, double lat, double lon) {
+                  int postal_code, String specific_den, String generic_den, int num_ratings,int num_reviews, double lat, double lon, HashMap<String, Boolean> reviews) {
         this.id = uid;
         this.address = address;
         this.province = province;
@@ -58,6 +62,7 @@ public class Centre implements Parcelable {
         this.num_reviews = num_reviews;
         this.lat = lat;
         this.lon = lon;
+        this.reviews = reviews;
     }
 
     public Centre(String s, String s1) {
@@ -77,6 +82,8 @@ public class Centre implements Parcelable {
         postal_code = in.readInt();
         num_ratings = in.readInt();
         num_reviews = in.readInt();
+        reviews = in.readHashMap(null);
+//        in.readList(reviews, null);
     }
 
     public static final Creator<Centre> CREATOR = new Creator<Centre>() {
@@ -107,6 +114,7 @@ public class Centre implements Parcelable {
         result.put("num_ratings", num_ratings);
         result.put("lat", lat);
         result.put("lon", lon);
+        result.put("reviews", reviews);
         return result;
     }
 
@@ -130,6 +138,9 @@ public class Centre implements Parcelable {
         dest.writeString(thumbnail_url);
         dest.writeDouble(lat);
         dest.writeDouble(lon);
+//        dest.writeList(reviews);
+        dest.writeMap(reviews);
     }
+
     // [END centre_to_map]
 }

@@ -3,7 +3,6 @@ package com.argandevteam.fpes.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +18,6 @@ import com.argandevteam.fpes.adapter.ReviewsAdapter;
 import com.argandevteam.fpes.model.Centre;
 import com.argandevteam.fpes.model.Review;
 import com.argandevteam.fpes.model.User;
-import com.argandevteam.fpes.utils.CircleTransform;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -30,8 +28,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -64,9 +60,13 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     TextView centreSpecificDen;
 
     RatingBar centreRating;
-    private DatabaseReference centreRef;
-    private DatabaseReference reviewsRef;
+
     private DatabaseReference mDatabase;
+    private DatabaseReference centreRef;
+    private DatabaseReference centresReviews;
+    private DatabaseReference userReviewsRef;
+    private DatabaseReference userRef;
+    private DatabaseReference reviewsRef;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -88,23 +88,44 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         listViewHeader = (ViewGroup) inflater.inflate(R.layout.list_view_header, lvReview, false);
         getActivity().setTitle("Detalles");
 
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
         mDatabase = instance.getReference();
+
         centreRef = mDatabase.child("centres").child(String.valueOf(centre.id - 1));
-        reviewsRef = centreRef.child("reviews");
+        centresReviews = mDatabase.child("centres-reviews").child(String.valueOf(centre.id - 1));
+        userRef = mDatabase.child("users");
+        userReviewsRef = mDatabase.child("users-reviews");
+        reviewsRef = mDatabase.child("reviews");
+
         setUpListView(inflater, savedInstanceState);
         return view;
     }
 
     private void setUpAdapter() {
         reviewsList = new ArrayList<>();
-        reviewsRef.addValueEventListener(new ValueEventListener() {
+        centresReviews.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 reviewsList.clear();
-                for (DataSnapshot centreSnapshot : dataSnapshot.getChildren()) {
-                    Review review = centreSnapshot.getValue(Review.class);
-                    reviewsList.add(review);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot centreReviewSnapshot : dataSnapshot.getChildren()) {
+                        final Review review = centreReviewSnapshot.getValue(Review.class);
+                        userRef.child(review.user_uid).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                review.user = dataSnapshot.getValue(User.class);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                        reviewsList.add(review);
+                    }
                 }
                 reviewsAdapter.notifyDataSetChanged();
             }
@@ -124,7 +145,6 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
             }
         });
     }
-
 
 
     private void setUpListView(LayoutInflater inflater, Bundle savedInstanceState) {
@@ -178,39 +198,18 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     }
 
     private void sendReview() {
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String reviewText = reviewEditText.getText().toString();
         final float rating = ratingBar.getRating();
-        User user = new User(currentUser.getUid(), currentUser.getEmail(), currentUser.getDisplayName(), currentUser.getPhotoUrl().toString());
         String date = DateFormat.getInstance().format(new Date()).split(" ")[0];
 
-        final Review review = new Review(user, rating, reviewText, date);
+        final Review review = new Review(currentUser.getUid(), rating, reviewText, date);
 
-//        centreRef.runTransaction(new Transaction.Handler() {
-//            @Override
-//            public Transaction.Result doTransaction(MutableData mutableData) {
-//                Centre centre = mutableData.getValue(Centre.class);
-//                if (centre == null) {
-//                    return Transaction.success(mutableData);
-//                }
-//                centre.num_reviews += 1;
-//                centre.num_ratings += 1;
-//                centre.sum_ratings += rating;
-//
-//                mutableData.setValue(centre);
-//                return Transaction.success(mutableData);
-//            }
-//
-//            @Override
-//            public void onComplete(DatabaseError databaseError, boolean success, DataSnapshot dataSnapshot) {
-//                // Analyse databaseError for any error during increment
-//                Log.d(TAG, "postTransaction:onComplete: " + databaseError);
-////                centreRef.child("reviews").push().setValue(review);
-//
-//            }
-//        });
-        centreRef.child("reviews").push().setValue(review);
-
+        String reviewPushKey = centreRef.child("reviews").push().getKey();
+        userReviewsRef.child(currentUser.getUid()).child(reviewPushKey).setValue(review);
+        centresReviews.child(reviewPushKey).setValue(review);
+        reviewsRef.child(reviewPushKey).setValue(review);
+        centreRef.child("reviews").child(reviewPushKey).setValue(true);
+        userRef.child(currentUser.getUid()).child("reviews").child(reviewPushKey).setValue(true);
     }
 }

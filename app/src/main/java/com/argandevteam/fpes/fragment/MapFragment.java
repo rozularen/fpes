@@ -99,15 +99,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onResume() {
         super.onResume();
 
-        if (checkPermissionsLocation()) {
-            if (ContextCompat.checkSelfPermission(getContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-
-                //Request location updates:
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
-            }
-        }
+//        if (checkPermissionsLocation()) {
+//            if (ContextCompat.checkSelfPermission(getContext(),
+//                    Manifest.permission.ACCESS_FINE_LOCATION)
+//                    == PackageManager.PERMISSION_GRANTED) {
+//
+//                //Request location updates:
+//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
+//            }
+//        }
 
     }
 
