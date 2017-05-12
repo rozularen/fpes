@@ -49,6 +49,7 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     ArrayList<Review> reviewsList;
     @BindView(R.id.reviewList)
     ListView lvReview;
+
     MapView mapView;
     TextView numReviews;
     RatingBar ratingBar;
