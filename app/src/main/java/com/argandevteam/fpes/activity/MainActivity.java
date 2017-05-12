@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 if (currentUser != null) {
                     drawerHeaderName.setText(currentUser.getDisplayName());
-                    Picasso.with(activity).load(currentUser.getPhotoUrl()).fit().transform(new CircleTransform()).into(drawerUserPhoto);
+                    Picasso.with(activity).load(currentUser.getPhotoUrl()).transform(new CircleTransform()).into(drawerUserPhoto);
                     Picasso.with(activity).load(currentUser.getPhotoUrl()).transform(new BlurTransformation(activity)).into(customLinearLayout);
                 } else {
                     Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
@@ -196,7 +196,6 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         try {
             if (fragmentClass != null) {
                 fragment = (Fragment) fragmentClass.newInstance();
-                profileFragment = (ProfileFragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
                 setTitle(menuItem.getTitle());

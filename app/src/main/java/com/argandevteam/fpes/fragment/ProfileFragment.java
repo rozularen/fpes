@@ -85,11 +85,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_photo_container:
-                Intent selectImageIntent = new Intent(
-                        Intent.ACTION_PICK,
-                        MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+             //   Intent selectImageIntent = new Intent(
+//                        Intent.ACTION_PICK,
+//                        MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 
-                startActivityForResult(selectImageIntent, GET_FROM_GALLERY);
+               // startActivityForResult(selectImageIntent, GET_FROM_GALLERY);
 
                 Toast.makeText(getContext(), "GALERIA", Toast.LENGTH_SHORT).show();
                 break;

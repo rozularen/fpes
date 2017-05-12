@@ -1,12 +1,20 @@
 package com.argandevteam.fpes.fragment;
 
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -32,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -51,16 +60,19 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     ListView lvReview;
 
     MapView mapView;
-    TextView numReviews;
-    RatingBar ratingBar;
-    EditText reviewEditText;
-    TextView btnSend;
+    RatingBar centreRating;
+    RatingBar userRating;
+    TextInputLayout reviewInputLayout;
+    TextInputEditText reviewEditText;
+    Button btnSend;
     FirebaseUser currentUser;
     ViewGroup listViewHeader;
     ImageView centreImage;
+    TextView numReviews;
     TextView centreSpecificDen;
-
-    RatingBar centreRating;
+    TextView centreAddress;
+    TextView centreNature;
+    TextView centreRatingValue;
 
     private DatabaseReference mDatabase;
     private DatabaseReference centreRef;
@@ -83,14 +95,13 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_details, container, false);
+        View view = inflater.inflate(R.layout.centre_list_reviews, container, false);
         lvReview = (ListView) view.findViewById(R.id.reviewList);
         ButterKnife.bind(this, view);
-        listViewHeader = (ViewGroup) inflater.inflate(R.layout.list_view_header, lvReview, false);
+        listViewHeader = (ViewGroup) inflater.inflate(R.layout.centre_details, lvReview, false);
         getActivity().setTitle("Detalles");
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
 
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
         mDatabase = instance.getReference();
@@ -149,12 +160,18 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
 
 
     private void setUpListView(LayoutInflater inflater, Bundle savedInstanceState) {
-        ratingBar = (RatingBar) listViewHeader.findViewById(R.id.user_rating);
-        reviewEditText = (EditText) listViewHeader.findViewById(R.id.user_review);
-        btnSend = (TextView) listViewHeader.findViewById(R.id.btnSend);
-        numReviews = (TextView) listViewHeader.findViewById(R.id.centre_num_reviews);
+        btnSend = (Button) listViewHeader.findViewById(R.id.btnSend);
+        userRating = (RatingBar) listViewHeader.findViewById(R.id.user_rating);
+        centreRating = (RatingBar) listViewHeader.findViewById(R.id.centre_rating);
         centreImage = (ImageView) listViewHeader.findViewById(R.id.centre_image);
+        reviewInputLayout = (TextInputLayout) listViewHeader.findViewById(R.id.user_review_input_layout);
+        reviewEditText = (TextInputEditText) listViewHeader.findViewById(R.id.user_review);
+        numReviews = (TextView) listViewHeader.findViewById(R.id.centre_num_reviews);
         centreSpecificDen = (TextView) listViewHeader.findViewById(R.id.centre_specific_den);
+        centreRatingValue = (TextView) listViewHeader.findViewById(R.id.centre_rating_value);
+        centreAddress = (TextView) listViewHeader.findViewById(R.id.centre_address);
+        centreNature = (TextView) listViewHeader.findViewById(R.id.centre_nature);
+
         Picasso.with(getContext()).load(centre.thumbnail_url)
                 .fit()
                 .placeholder(R.drawable.com_facebook_button_background)
@@ -162,11 +179,16 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
                 .into(centreImage);
 
         btnSend.setOnClickListener(this);
-        ratingBar.setRating(centre.sum_ratings / centre.num_ratings);
         numReviews.setText(String.valueOf(centre.num_reviews));
         centreSpecificDen.setText(centre.specific_den);
         lvReview.addHeaderView(listViewHeader);
+        centreRating.setRating(centre.rating_average);
+        DecimalFormat df = new DecimalFormat("#.#");
 
+        centreRatingValue.setText(String.valueOf(df.format(centre.rating_average)) + "/5");
+        centreNature.setText(centre.nature);
+        centreAddress.setText(centre.address);
+        numReviews.setText(centre.reviews.size() + " opiniones de usuarios");
         initializeMaps(savedInstanceState, listViewHeader);
 
         lvReview.setDivider(null);
@@ -201,7 +223,17 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     private void sendReview() {
 
         String reviewText = reviewEditText.getText().toString();
-        final float rating = ratingBar.getRating();
+        String errorMessage = null;
+        if (TextUtils.isEmpty(reviewText)) {
+            errorMessage = "Introduzca una breve opinión";
+
+        }
+        if (reviewText.length() < 6) {
+            errorMessage = "Opinion demasiado corta";
+        }
+
+        toggleTextInputLayoutError(reviewInputLayout, errorMessage);
+        final float rating = userRating.getRating();
         String date = DateFormat.getInstance().format(new Date()).split(" ")[0];
 
         final Review review = new Review(currentUser.getUid(), rating, reviewText, date);
@@ -212,5 +244,27 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         reviewsRef.child(reviewPushKey).setValue(review);
         centreRef.child("reviews").child(reviewPushKey).setValue(true);
         userRef.child(currentUser.getUid()).child("reviews").child(reviewPushKey).setValue(true);
+    }
+
+    private void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
+                                            String msg) {
+        textInputLayout.setError(msg);
+        if (msg == null) {
+            textInputLayout.setErrorEnabled(false);
+        } else {
+            textInputLayout.setErrorEnabled(true);
+            reviewEditText.setBackgroundColor(Color.WHITE);
+
+        }
+    }
+
+    private void clearFocus() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null && view instanceof EditText) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context
+                    .INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            view.clearFocus();
+        }
     }
 }

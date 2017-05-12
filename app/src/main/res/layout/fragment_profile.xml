@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Añadir foto"
-            android:textColor="@color/cardTextColor" />
+            android:textColor="@color/textColor" />
     </LinearLayout>
 
     <View
@@ -38,7 +38,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/cardTextColor" />
+        android:background="@color/textColor" />
 
     <TextView
         android:id="@+id/profile_user_name"
@@ -47,7 +47,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="Marcos Stival"
-        android:textColor="@color/cardTextColor"
+        android:textColor="@color/textColor"
         android:textSize="28sp" />
 
     <TextView
@@ -56,14 +56,14 @@
         android:gravity="center"
 
         android:text="Técnico Superior en Desarrollo de Aplicaciones Multiplataforma"
-        android:textColor="@color/cardTextColor" />
+        android:textColor="@color/textColor" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:background="@color/cardTextColor" />
+        android:background="@color/textColor" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -71,5 +71,5 @@
         android:layout_gravity="center"
         android:text="ACTUALIZAR PERFIL"
 
-        android:textColor="@color/cardTextColor" />
+        android:textColor="@color/textColor" />
 </LinearLayout>

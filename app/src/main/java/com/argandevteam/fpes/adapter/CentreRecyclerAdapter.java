@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Centre centre = mValues.get(position);
-
+        calculateCentreAverageRating(holder, centre);
         holder.centreSpecificDen.setText(centre.specific_den);
         holder.centreAddress.setText(centre.address);
         holder.centreNature.setText(centre.nature);
@@ -83,8 +84,6 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
         mListener.onListFragmentInteraction(holder.centre);
     }
 
-
-
     public void setOnItemClickListener(ItemClickListener listener) {
         this.listener = listener;
     }
@@ -92,6 +91,32 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+
+    private void calculateCentreAverageRating(final ViewHolder viewHolder, final Centre centre) {
+//        List<String> reviewsKeys = new ArrayList<>();
+//        for(Map.Entry<String, Boolean> entry : centre.reviews.entrySet()){
+//            reviewsKeys.add(entry.getKey());
+//        }
+        centresReviewsRef.child(String.valueOf(centre.id - 1)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot reviewSnapshot : dataSnapshot.getChildren()) {
+                    Review review = reviewSnapshot.getValue(Review.class);
+                    centre.sum_ratings += review.rating;
+                    centre.num_ratings++;
+                }
+                centre.rating_average = centre.sum_ratings / centre.num_ratings;
+                viewHolder.centreRating.setRating(centre.rating_average);
+                Log.d(TAG, "onDataChange: " + centre.rating_average);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

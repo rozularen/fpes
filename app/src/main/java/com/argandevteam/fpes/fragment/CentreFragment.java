@@ -51,6 +51,7 @@ public class CentreFragment extends Fragment {
     ProgressBar progressBar;
     @BindView(R.id.lvCentres)
     RecyclerView recyclerView;
+
     private OnListFragmentInteractionListener mListener;
     private List<Centre> myList;
     CentreRecyclerAdapter centreRecyclerAdapter;
@@ -85,7 +86,6 @@ public class CentreFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot centreSnapshot : dataSnapshot.getChildren()) {
                     Centre centre = centreSnapshot.getValue(Centre.class);
-                    calculateCentreAverageRating(centre);
                     myList.add(centre);
                 }
                 centreRecyclerAdapter.notifyDataSetChanged();
@@ -100,28 +100,6 @@ public class CentreFragment extends Fragment {
         });
     }
 
-    private void calculateCentreAverageRating(final Centre centre) {
-//        List<String> reviewsKeys = new ArrayList<>();
-//        for(Map.Entry<String, Boolean> entry : centre.reviews.entrySet()){
-//            reviewsKeys.add(entry.getKey());
-//        }
-        centresReviewsRef.child(String.valueOf(centre.id - 1)).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot reviewSnapshot : dataSnapshot.getChildren()) {
-                    Review review = reviewSnapshot.getValue(Review.class);
-                    centre.sum_ratings += review.rating;
-                    centre.num_ratings++;
-                }
-                centre.rating_average = centre.sum_ratings / centre.num_ratings;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
