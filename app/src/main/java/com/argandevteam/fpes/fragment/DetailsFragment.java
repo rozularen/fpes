@@ -26,10 +26,15 @@ import com.argandevteam.fpes.adapter.ReviewsAdapter;
 import com.argandevteam.fpes.model.Centre;
 import com.argandevteam.fpes.model.Review;
 import com.argandevteam.fpes.model.User;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -209,7 +214,14 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        LatLng centreLatLng = new LatLng(centre.lat, centre.lon);
+        CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(centreLatLng, 8.5f);
+        googleMap.animateCamera(yourLocation);
+        Marker marker = googleMap.addMarker(new MarkerOptions()
+                .position(centreLatLng)
+                .snippet("Dirección: " + centre.address)
+                .title(centre.specific_den));
+        marker.setTag(centre);
     }
 
     @Override
