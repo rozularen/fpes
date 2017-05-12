@@ -59,12 +59,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     private static final String TAG = "MapFragment";
     private static final int MY_PERMISSIONS_LOCATION = 1;
+    private DatabaseReference mDatabase;
+    private ArrayList<Centre> myList;
+
     GoogleMap map;
     @BindView(R.id.mapView)
     MapView mapView;
+
     LocationManager locationManager;
-    private DatabaseReference mDatabase;
-    private ArrayList<Centre> myList;
 
     public MapFragment() {
         // Required empty public constructor
@@ -159,9 +161,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 }).create().show();
 
             } else {
-
                 // No explanation needed, we can request the permission.
-
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.READ_CONTACTS},
                         MY_PERMISSIONS_LOCATION);

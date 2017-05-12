@@ -1,7 +1,6 @@
 package com.argandevteam.fpes.activity;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +48,7 @@ import jp.wasabeef.picasso.transformations.BlurTransformation;
 public class MainActivity extends AppCompatActivity implements CentreFragment.OnListFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "MainActivity";
+    private static final int GET_FROM_GALLERY = 1;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -75,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager callbackManager;
 
+    ProfileFragment profileFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         customLinearLayout = (CustomLinearLayout) header.findViewById(R.id.custom_linear_layout);
         drawerHeaderName = (TextView) header.findViewById(R.id.drawer_header_name);
         drawerUserPhoto = (ImageView) header.findViewById(R.id.drawer_user_icon);
+
+        profileFragment = new ProfileFragment();
 
         setUpFirebase();
         setUpGoogleSignIn();
@@ -193,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         try {
             if (fragmentClass != null) {
                 fragment = (Fragment) fragmentClass.newInstance();
+                profileFragment = (ProfileFragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
                 setTitle(menuItem.getTitle());
@@ -228,5 +232,13 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
     @Override
     public void onListFragmentInteraction(Centre item) {
         Log.d(TAG, "onListFragmentInteraction: asdasdasd");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GET_FROM_GALLERY && resultCode == -1) {
+            profileFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
