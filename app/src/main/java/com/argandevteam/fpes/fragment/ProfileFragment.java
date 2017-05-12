@@ -103,10 +103,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                 setNewUserImage(selectedImage);
-//                Picasso.with(getContext()).load(selectedImage).fit().transform(new CircleTransform()).into(profileUserImage);
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
