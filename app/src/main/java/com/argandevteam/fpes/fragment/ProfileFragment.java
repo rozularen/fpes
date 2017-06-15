@@ -14,12 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
+import com.argandevteam.fpes.ui.CustomLinearLayout;
 import com.argandevteam.fpes.utils.CircleTransform;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +36,7 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,20 +47,27 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private static final int GET_FROM_GALLERY = 1;
     private static final String TAG = "ProfileFragment";
 
-
     @BindView(R.id.user_photo_container)
-    LinearLayout userPhotoContainer;
+    CustomLinearLayout customLinearLayout;
     @BindView(R.id.user_photo_view)
     ImageView profileUserImage;
     @BindView(R.id.profile_user_name)
     TextView profileUserName;
+    @BindView(R.id.update_profile)
+    TextView updateProfile;
+    @BindView(R.id.profile_description)
+    TextView profileDescription;
+    @BindView(R.id.description_input)
+    EditText descriptionInput;
 
     private FirebaseUser firebaseUser;
     private Uri photoUri;
+    private boolean isSaving;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,9 +75,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
+        updateProfile.setOnClickListener(this);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        userPhotoContainer.setOnClickListener(this);
+        customLinearLayout.setOnClickListener(this);
         Log.d(TAG, "onCreateView: setting user image");
         Picasso.with(getContext())
                 .load(firebaseUser.getPhotoUrl())
@@ -75,6 +86,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 .transform(new CircleTransform())
                 .centerCrop()
                 .into(profileUserImage);
+
+        Picasso.with(getContext())
+                .load(firebaseUser.getPhotoUrl())
+                .transform(new BlurTransformation(getContext()))
+                .into(customLinearLayout);
+
 
         profileUserName.setText(firebaseUser.getDisplayName());
 
@@ -85,17 +102,37 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.user_photo_container:
-             //   Intent selectImageIntent = new Intent(
+                //   Intent selectImageIntent = new Intent(
 //                        Intent.ACTION_PICK,
 //                        MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 
-               // startActivityForResult(selectImageIntent, GET_FROM_GALLERY);
+                // startActivityForResult(selectImageIntent, GET_FROM_GALLERY);
 
                 Toast.makeText(getContext(), "GALERIA", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.update_profile:
+                updateProfileDescription();
+                Toast.makeText(getActivity(), "actualizar", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
         }
+    }
+
+    private void updateProfileDescription() {
+        if(!isSaving) {
+            updateProfile.setText("Guardar Cambios");
+            profileDescription.setVisibility(View.GONE);
+            descriptionInput.setVisibility(View.VISIBLE);
+            isSaving = true;
+        }else{
+            updateProfile.setText("Actualizar Perfil");
+            profileDescription.setVisibility(View.VISIBLE);
+            descriptionInput.setVisibility(View.GONE);
+            isSaving = false;
+
+        }
+
     }
 
     @Override

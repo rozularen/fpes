@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -116,10 +118,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Toast.makeText(RegisterActivity.this, "fallo",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+                            String description = "";
                             final User newUser = new User(task.getResult().getUser().getUid(),
                                     emailText.getText().toString(),
                                     nameText.getText().toString(),
-                                    "https://firebasestorage.googleapis.com/v0/b/fpes-156817.appspot.com/o/default-user.png?alt=media&token=0db5e75d-cf2c-4112-9a95-fa7655e3b890");
+                                    "https://firebasestorage.googleapis.com/v0/b/fpes-156817.appspot.com/o/default-user.png?alt=media&token=0db5e75d-cf2c-4112-9a95-fa7655e3b890",
+                                    description,
+                                    new HashMap<String, Boolean>());
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(userName)

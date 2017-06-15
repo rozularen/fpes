@@ -63,6 +63,7 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -211,7 +212,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void addUser(FirebaseUser user) {
-        User newUser = new User(user.getUid(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
+        String description = "Escribe tu biografía";
+        User newUser = new User(user.getUid(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString(), description, new HashMap<String, Boolean>());
         userRef.child(user.getUid()).setValue(newUser);
     }
 
