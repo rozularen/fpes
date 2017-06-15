@@ -1,4 +1,4 @@
-<com.argandevteam.fpes.CustomLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.argandevteam.fpes.ui.CustomLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/custom_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="190dp"
@@ -28,4 +28,4 @@
             android:textColor="#FAFAFA"
             android:textSize="24dp" />
     </LinearLayout>
-</com.argandevteam.fpes.CustomLinearLayout>
+</com.argandevteam.fpes.ui.CustomLinearLayout>

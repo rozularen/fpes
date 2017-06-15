@@ -1,4 +1,4 @@
-package com.argandevteam.fpes;
+package com.argandevteam.fpes.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;

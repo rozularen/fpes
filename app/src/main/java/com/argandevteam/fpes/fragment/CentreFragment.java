@@ -25,6 +25,8 @@ import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.adapter.CentreRecyclerAdapter;
 import com.argandevteam.fpes.model.Centre;
 import com.argandevteam.fpes.model.Review;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,10 +49,15 @@ import butterknife.ButterKnife;
 public class CentreFragment extends Fragment {
 
     private static final String TAG = "CentreFragment";
+
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+
     @BindView(R.id.lvCentres)
     RecyclerView recyclerView;
+
+    @BindView(R.id.adView)
+    AdView mAdView;
 
     private OnListFragmentInteractionListener mListener;
     private List<Centre> myList;
@@ -109,6 +116,9 @@ public class CentreFragment extends Fragment {
         // Set the adapter
         ButterKnife.bind(this, view);
 
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         Context context = view.getContext();
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -126,10 +136,11 @@ public class CentreFragment extends Fragment {
                 detailsFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout, detailsFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, detailsFragment, detailsFragment.getTag())
+                        .addToBackStack(null)
+                        .commit();
 
                 Log.d(TAG, "onClick: " + myList.get(position).specific_den);
             }
@@ -161,10 +172,13 @@ public class CentreFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.frame_layout, new SearchFragment());
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            SearchFragment fragment = new SearchFragment();
+
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.frame_layout, fragment, fragment.getTag())
+                    .addToBackStack(null)
+                    .commit();
         }
         return super.onOptionsItemSelected(item);
     }

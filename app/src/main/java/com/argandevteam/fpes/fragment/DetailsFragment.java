@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.adapter.ReviewsAdapter;
@@ -193,7 +194,9 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         centreRatingValue.setText(String.valueOf(df.format(centre.rating_average)) + "/5");
         centreNature.setText(centre.nature);
         centreAddress.setText(centre.address);
-        numReviews.setText(centre.reviews.size() + " opiniones de usuarios");
+        if(centre.reviews != null) {
+            numReviews.setText(centre.reviews.size() + " opiniones de usuarios");
+        }
         initializeMaps(savedInstanceState, listViewHeader);
 
         lvReview.setDivider(null);
@@ -256,6 +259,9 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         reviewsRef.child(reviewPushKey).setValue(review);
         centreRef.child("reviews").child(reviewPushKey).setValue(true);
         userRef.child(currentUser.getUid()).child("reviews").child(reviewPushKey).setValue(true);
+        reviewEditText.setText("");
+        userRating.setRating(0);
+        Toast.makeText(getActivity(), "Tu opinión ha sido registrada.", Toast.LENGTH_SHORT).show();
     }
 
     private void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,

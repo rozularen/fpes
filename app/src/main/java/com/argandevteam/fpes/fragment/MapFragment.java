@@ -11,8 +11,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.activity.MainActivity;
@@ -68,13 +72,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
     LocationManager locationManager;
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -83,7 +83,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-
+//                    activateUserLocation();
                 } else {
 
                     // permission denied, boo! Disable the
@@ -91,27 +91,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-//        if (checkPermissionsLocation()) {
-//            if (ContextCompat.checkSelfPermission(getContext(),
-//                    Manifest.permission.ACCESS_FINE_LOCATION)
-//                    == PackageManager.PERMISSION_GRANTED) {
-//
-//                //Request location updates:
-//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
-//            }
-//        }
-
+    public MapFragment() {
+        // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,7 +108,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         ButterKnife.bind(this, view);
 
-        checkPermissionsLocation();
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
@@ -138,51 +123,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         return view;
     }
 
-    private boolean checkPermissionsLocation() {
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.READ_CONTACTS)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                new AlertDialog.Builder(getContext()).setTitle("T").setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{Manifest.permission.READ_CONTACTS},
-                                MY_PERMISSIONS_LOCATION);
-                    }
-                }).create().show();
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_CONTACTS},
-                        MY_PERMISSIONS_LOCATION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-
     public Double[] stringToCoord(List<Centre> centres) {
         Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
         Double lat = null, lon = null;
         try {
             for (Centre centre : centres) {
-                String address = centre.address + " " + centre.municipality + " " + centre.province;
+                String address = centre.address + ", " + centre.municipality;
                 List<Address> addresses = geoCoder.getFromLocationName(address, 5);
                 if (addresses.size() > 0) {
                     lat = (double) (addresses.get(0).getLatitude());
@@ -209,6 +155,51 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         myList = new ArrayList<Centre>();
         final ArrayList<Double[]> coordArr = new ArrayList<>();
         map.setOnInfoWindowClickListener(this);
+
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        try{
+            map.setMyLocationEnabled(true);
+            int isLocationEnabled = Settings.Secure.getInt(getContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
+            if(isLocationEnabled == 0){
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+                dialogBuilder
+                        .setTitle("Activar Localizacion GPS")
+                        .setMessage("Debe activar la localización GPS para que la aplicación funcione correctamente")
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
+                                CentreFragment fragment = new CentreFragment();
+                                supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, fragment.getTag()).commit();
+                            }
+                        })
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent onGPS = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(onGPS);
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        }catch(SecurityException | Settings.SettingNotFoundException e){
+            e.printStackTrace();
+        }
         mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -226,7 +217,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 LatLng coordinate = new LatLng(40.4212748, -3.7523294);
                 CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 8.5f);
                 map.animateCamera(yourLocation);
-                //    coordArr.add(stringToCoord(myList));
+//                coordArr.add(stringToCoord(myList));
 
             }
 
@@ -235,18 +226,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
             }
         });
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        googleMap.setMyLocationEnabled(true);
     }
 
     @Override
@@ -281,7 +260,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, detailsFragment);
+        fragmentTransaction.replace(R.id.frame_layout, detailsFragment, detailsFragment.getTag());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

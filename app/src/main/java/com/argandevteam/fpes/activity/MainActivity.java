@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.argandevteam.fpes.CustomLinearLayout;
+import com.argandevteam.fpes.ui.CustomLinearLayout;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.fragment.CentreFragment;
 import com.argandevteam.fpes.fragment.MapFragment;
@@ -31,6 +31,7 @@ import com.argandevteam.fpes.model.Centre;
 import com.argandevteam.fpes.utils.CircleTransform;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
     private DatabaseReference mDatabase;
     private MainActivity activity;
 
+
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
     private CallbackManager callbackManager;
 
     ProfileFragment profileFragment;
+    MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +85,12 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         setContentView(R.layout.drawer_layout);
         ButterKnife.bind(this);
 
+        MobileAds.initialize(this, "ca-app-pub-5632055827237755~3780528429");
         activity = this;
         View header = mDrawerList.getHeaderView(0);
         customLinearLayout = (CustomLinearLayout) header.findViewById(R.id.custom_linear_layout);
         drawerHeaderName = (TextView) header.findViewById(R.id.drawer_header_name);
         drawerUserPhoto = (ImageView) header.findViewById(R.id.drawer_user_icon);
-
-        profileFragment = new ProfileFragment();
 
         setUpFirebase();
         setUpGoogleSignIn();
@@ -117,7 +119,8 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         // Set the list's click listener
         mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new CentreFragment()).commit();
+        CentreFragment fragment = new CentreFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment, fragment.getTag()).commit();
 
         mDrawerList.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -187,8 +190,14 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
 
         } else if (menuItem.getItemId() == R.id.nav_map) {
             fragmentClass = MapFragment.class;
+            if(mapFragment != null){
+                mapFragment = new MapFragment();
+            }
         } else if (menuItem.getItemId() == R.id.nav_profile) {
             fragmentClass = ProfileFragment.class;
+            if(profileFragment != null){
+                profileFragment = new ProfileFragment();
+            }
         } else {
             fragmentClass = CentreFragment.class;
         }
@@ -197,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
             if (fragmentClass != null) {
                 fragment = (Fragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, fragment.getTag()).commit();
                 setTitle(menuItem.getTitle());
             }
         } catch (Exception e) {
@@ -207,12 +216,20 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, "onRequestPermissionsResult: ACTIVITY OK");
+        new MapFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
+
     }
 
     private void handleIntent(Intent intent) {
