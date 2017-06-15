@@ -82,6 +82,18 @@ public class CentreFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_centre_list, container, false);
+
+        // Set the adapter
+        ButterKnife.bind(this, view);
+
         myList = new ArrayList<>();
         setHasOptionsMenu(true);
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
@@ -105,16 +117,6 @@ public class CentreFragment extends Fragment {
 
             }
         });
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_centre_list, container, false);
-
-        // Set the adapter
-        ButterKnife.bind(this, view);
 
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

@@ -27,6 +27,8 @@ import com.argandevteam.fpes.adapter.ReviewsAdapter;
 import com.argandevteam.fpes.model.Centre;
 import com.argandevteam.fpes.model.Review;
 import com.argandevteam.fpes.model.User;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -65,6 +67,7 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     @BindView(R.id.reviewList)
     ListView lvReview;
 
+
     MapView mapView;
     RatingBar centreRating;
     RatingBar userRating;
@@ -87,6 +90,9 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     private DatabaseReference userRef;
     private DatabaseReference reviewsRef;
 
+    @BindView(R.id.adView)
+    AdView mAdView;
+
     public DetailsFragment() {
         // Required empty public constructor
     }
@@ -104,6 +110,10 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         View view = inflater.inflate(R.layout.centre_list_reviews, container, false);
         lvReview = (ListView) view.findViewById(R.id.reviewList);
         ButterKnife.bind(this, view);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         listViewHeader = (ViewGroup) inflater.inflate(R.layout.centre_details, lvReview, false);
         getActivity().setTitle("Detalles");
 

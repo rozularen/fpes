@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
  * Created by markc on 30/03/2017.
  */
 
-public class ReviewsAdapter extends BaseAdapter {
+public class ReviewsAdapter extends BaseAdapter implements View.OnClickListener {
 
     private Context context;
     private ArrayList<Review> reviews;
@@ -74,8 +75,24 @@ public class ReviewsAdapter extends BaseAdapter {
             holder.reviewText.setText(review.text);
             holder.reviewRating.setRating(review.rating);
             holder.reviewDate.setText(review.date);
+            holder.reviewLikeButton.setOnClickListener(this);
         }
         return convertView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.review_like_btn:
+                incrementReviewLike();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void incrementReviewLike() {
+
     }
 
     static class ViewHolder {
@@ -90,6 +107,9 @@ public class ReviewsAdapter extends BaseAdapter {
         TextView reviewText;
         @BindView(R.id.review_date)
         TextView reviewDate;
+        @BindView(R.id.review_like_btn)
+        ImageButton reviewLikeButton;
+
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
