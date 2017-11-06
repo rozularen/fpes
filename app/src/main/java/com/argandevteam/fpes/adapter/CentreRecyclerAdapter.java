@@ -1,8 +1,6 @@
 package com.argandevteam.fpes.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,9 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,19 +33,13 @@ import butterknife.ButterKnife;
  * TODO: Replace the implementation with code for your data type.
  */
 public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAdapter.ViewHolder> {
-    public interface ItemClickListener {
-        public void onClick(View view, int position);
-    }
-
-    private ItemClickListener listener;
     private static final String TAG = "RecyclerViewAdapter";
     private final List<Centre> mValues;
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
+    private ItemClickListener listener;
     private DatabaseReference mDatabase;
     private DatabaseReference centresReviewsRef;
-
-
     public CentreRecyclerAdapter(Context context, List<Centre> items, OnListFragmentInteractionListener listener) {
         this.context = context;
         mValues = items;
@@ -65,7 +55,6 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
         ViewHolder viewHolder = new ViewHolder(view, listener);
         return viewHolder;
     }
-
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
@@ -93,7 +82,6 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
         return mValues.size();
     }
 
-
     private void calculateCentreAverageRating(final ViewHolder viewHolder, final Centre centre) {
 //        List<String> reviewsKeys = new ArrayList<>();
 //        for(Map.Entry<String, Boolean> entry : centre.reviews.entrySet()){
@@ -117,6 +105,11 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
 
             }
         });
+    }
+
+
+    public interface ItemClickListener {
+        public void onClick(View view, int position);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

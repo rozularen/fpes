@@ -82,7 +82,7 @@ public class ReviewsAdapter extends BaseAdapter implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.review_like_btn:
                 incrementReviewLike();
                 break;

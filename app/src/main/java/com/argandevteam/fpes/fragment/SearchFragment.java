@@ -29,16 +29,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
 
 
     private static final String TAG = "SearchFragment";
-    private SearchView searchView;
-
     @BindView(R.id.seek_bar)
     SeekBar radiusSeekBar;
-
     @BindView(R.id.radius_text)
     TextView radiusText;
-
     @BindView(R.id.search_button)
     Button searchButton;
+    private SearchView searchView;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -77,10 +74,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
-        if(menuItem != null){
+        if (menuItem != null) {
             Log.d(TAG, "onCreateOptionsMenu: not null");
             searchView = (SearchView) menuItem.getActionView();
-            if(searchView != null){
+            if (searchView != null) {
                 Log.d(TAG, "onCreateOptionsMenu: NOT null");
                 searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                     @Override
@@ -98,11 +95,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == searchButton.getId()){
+        if (id == searchButton.getId()) {
             Toast.makeText(getActivity(), "HOLA", Toast.LENGTH_SHORT).show();
             FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
             CentreFragment fragment = new CentreFragment();

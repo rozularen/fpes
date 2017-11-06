@@ -3,18 +3,17 @@ package com.argandevteam.fpes.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,32 +37,24 @@ import butterknife.ButterKnife;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "RegisterActivity";
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
-//    @BindView(R.id.user_photo_container)
-//    LinearLayout luserPhotoContainer;
-
     @BindView(R.id.name_input_layout)
     TextInputLayout nameLayout;
     @BindView(R.id.email_input_layout)
     TextInputLayout emailLayout;
     @BindView(R.id.password_input_layout)
     TextInputLayout passwordLayout;
-
     @BindView(R.id.ainput_email)
     TextInputEditText emailText;
     @BindView(R.id.ainput_password)
     TextInputEditText passwordText;
     @BindView(R.id.ainput_name)
     TextInputEditText nameText;
-
     @BindView(R.id.link_login)
     TextView loginLink;
-
     @BindView(R.id.signup_button)
     Button signUpButton;
-
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private String name, email, password;
     private Activity activity;
@@ -80,8 +71,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         signUpButton.setOnClickListener(this);
         //luserPhotoContainer.setOnClickListener(this);
     }
-
-    ;
 
     private void setUpFirebase() {
         mAuth = FirebaseAuth.getInstance();
@@ -148,11 +137,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     });
                                 }
                             });
-
-
-
-
-
                         }
                     }
                 });
@@ -226,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      * @param msg the message, or null to hide
      */
     private void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
-                                                   String msg) {
+                                            String msg) {
         textInputLayout.setError(msg);
         if (msg == null) {
             textInputLayout.setErrorEnabled(false);

@@ -3,26 +3,13 @@ package com.argandevteam.fpes.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
-import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.model.User;
-import com.argandevteam.fpes.utils.Constants;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -31,17 +18,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
+import com.argandevteam.fpes.R;
+import com.argandevteam.fpes.model.User;
+import com.argandevteam.fpes.utils.Constants;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -51,17 +41,9 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -71,7 +53,24 @@ import butterknife.ButterKnife;
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
-
+    private static final int RC_SIGN_IN_GOOGLE = 1;
+    CallbackManager mCallbackManager;
+    @BindView(R.id.email_input_layout)
+    TextInputLayout emailInputLayout;
+    @BindView(R.id.password_input_layout)
+    TextInputLayout passwordInputLayout;
+    @BindView(R.id.input_email)
+    TextInputEditText emailText;
+    @BindView(R.id.input_password)
+    TextInputEditText passwordText;
+    @BindView(R.id.login_button)
+    Button loginButton;
+    @BindView(R.id.google_login_button)
+    Button googleLoginButton;
+    @BindView(R.id.fb_login_button)
+    Button fbLogin;
+    @BindView(R.id.link_signup)
+    TextView signupLink;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private LoginManager mLoginManager;
@@ -80,34 +79,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private DatabaseReference userRef;
     private AuthCredential fbCredential;
     private AuthCredential googleCredential;
-
-    private static final int RC_SIGN_IN_GOOGLE = 1;
-
-    CallbackManager mCallbackManager;
-
-    @BindView(R.id.email_input_layout)
-    TextInputLayout emailInputLayout;
-    @BindView(R.id.password_input_layout)
-    TextInputLayout passwordInputLayout;
-
-    @BindView(R.id.input_email)
-    TextInputEditText emailText;
-    @BindView(R.id.input_password)
-    TextInputEditText passwordText;
-
-    @BindView(R.id.login_button)
-    Button loginButton;
-    @BindView(R.id.google_login_button)
-    Button googleLoginButton;
-    @BindView(R.id.fb_login_button)
-    Button fbLogin;
-
-    @BindView(R.id.link_signup)
-    TextView signupLink;
     private SharedPreferences sharedPreferences;
 
 //    @BindView(R.id.sign_in_button)
 //    SignInButton googleLoginButton;
+
+    private static void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
+                                                   String msg) {
+        textInputLayout.setError(msg);
+        if (msg == null) {
+            textInputLayout.setErrorEnabled(false);
+        } else {
+            textInputLayout.setErrorEnabled(true);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +157,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         };
     }
 
-
     private AuthCredential getCredential(AccessToken accessToken) {
         return FacebookAuthProvider.getCredential(accessToken.getToken());
     }
@@ -201,7 +185,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     Log.w(TAG, "signInWithCredential", task.getException());
                     Toast.makeText(LoginActivity.this, "Authentication failed.",
                             Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
                         addUser(task.getResult().getUser());
                         sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
@@ -233,7 +217,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.w(TAG, "signInWithEmail:failed", task.getException());
                             Toast.makeText(LoginActivity.this, "Nopeee",
                                     Toast.LENGTH_SHORT).show();
-                        }else{
+                        } else {
                             if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
                                 addUser(task.getResult().getUser());
                                 sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
@@ -243,7 +227,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -261,16 +244,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         }
 
-    }
-
-    private static void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
-                                                   String msg) {
-        textInputLayout.setError(msg);
-        if (msg == null) {
-            textInputLayout.setErrorEnabled(false);
-        } else {
-            textInputLayout.setErrorEnabled(true);
-        }
     }
 
     private AuthCredential getCredential(GoogleSignInAccount acct) {

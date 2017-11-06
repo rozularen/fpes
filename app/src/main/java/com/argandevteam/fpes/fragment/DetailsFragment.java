@@ -82,16 +82,14 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     TextView centreAddress;
     TextView centreNature;
     TextView centreRatingValue;
-
+    @BindView(R.id.adView)
+    AdView mAdView;
     private DatabaseReference mDatabase;
     private DatabaseReference centreRef;
     private DatabaseReference centresReviews;
     private DatabaseReference userReviewsRef;
     private DatabaseReference userRef;
     private DatabaseReference reviewsRef;
-
-    @BindView(R.id.adView)
-    AdView mAdView;
 
     public DetailsFragment() {
         // Required empty public constructor
@@ -204,7 +202,7 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         centreRatingValue.setText(String.valueOf(df.format(centre.rating_average)) + "/5");
         centreNature.setText(centre.nature);
         centreAddress.setText(centre.address);
-        if(centre.reviews != null) {
+        if (centre.reviews != null) {
             numReviews.setText(centre.reviews.size() + " opiniones de usuarios");
         }
         initializeMaps(savedInstanceState, listViewHeader);

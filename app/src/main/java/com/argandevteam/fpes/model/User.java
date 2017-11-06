@@ -1,7 +1,5 @@
 package com.argandevteam.fpes.model;
 
-import android.net.Uri;
-
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.HashMap;

@@ -8,7 +8,6 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.squareup.picasso.Target;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +16,17 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class Centre implements Parcelable {
 
+    public static final Creator<Centre> CREATOR = new Creator<Centre>() {
+        @Override
+        public Centre createFromParcel(Parcel in) {
+            return new Centre(in);
+        }
+
+        @Override
+        public Centre[] newArray(int size) {
+            return new Centre[size];
+        }
+    };
     public Target target;
     public String address;
     public int id;
@@ -33,21 +43,16 @@ public class Centre implements Parcelable {
     public int num_ratings;
     public int postal_code;
     public int num_reviews;
-//    public List<HashMap<String, Boolean>> reviews;
+    //    public List<HashMap<String, Boolean>> reviews;
     public HashMap<String, Boolean> reviews;
-    public float rating_average ;
+    public float rating_average;
 
     public Centre() {
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
     public Centre(String address, int uid, String province, String city, String nature,
                   String municipality, String thumbnail_url,
-                  int postal_code, String specific_den, String generic_den, int num_ratings,int num_reviews, double lat, double lon, HashMap<String, Boolean> reviews) {
+                  int postal_code, String specific_den, String generic_den, int num_ratings, int num_reviews, double lat, double lon, HashMap<String, Boolean> reviews) {
         this.id = uid;
         this.address = address;
         this.province = province;
@@ -86,17 +91,10 @@ public class Centre implements Parcelable {
 //        in.readList(reviews, null);
     }
 
-    public static final Creator<Centre> CREATOR = new Creator<Centre>() {
-        @Override
-        public Centre createFromParcel(Parcel in) {
-            return new Centre(in);
-        }
-
-        @Override
-        public Centre[] newArray(int size) {
-            return new Centre[size];
-        }
-    };
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 
     // [START centre_to_map]
     @Exclude

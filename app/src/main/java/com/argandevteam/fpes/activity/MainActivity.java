@@ -22,12 +22,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.argandevteam.fpes.ui.CustomLinearLayout;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.fragment.CentreFragment;
 import com.argandevteam.fpes.fragment.MapFragment;
 import com.argandevteam.fpes.fragment.ProfileFragment;
 import com.argandevteam.fpes.model.Centre;
+import com.argandevteam.fpes.ui.CustomLinearLayout;
 import com.argandevteam.fpes.utils.CircleTransform;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
@@ -38,7 +38,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
@@ -50,34 +49,25 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
 
     private static final String TAG = "MainActivity";
     private static final int GET_FROM_GALLERY = 1;
-
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    CustomLinearLayout customLinearLayout;
+    TextView drawerHeaderName;
+    ImageView drawerUserPhoto;
+    @BindView(R.id.navigation)
+    NavigationView mDrawerList;
+    @BindView(R.id.my_toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.frame_layout)
+    FrameLayout frameLayout;
+    ProfileFragment profileFragment;
+    MapFragment mapFragment;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private MainActivity activity;
-
-
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-
-    CustomLinearLayout customLinearLayout;
-    TextView drawerHeaderName;
-    ImageView drawerUserPhoto;
-
-    @BindView(R.id.navigation)
-    NavigationView mDrawerList;
-
-    @BindView(R.id.my_toolbar)
-    Toolbar mToolbar;
-
-    @BindView(R.id.frame_layout)
-    FrameLayout frameLayout;
-
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager callbackManager;
-
-    ProfileFragment profileFragment;
-    MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,12 +180,12 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
 
         } else if (menuItem.getItemId() == R.id.nav_map) {
             fragmentClass = MapFragment.class;
-            if(mapFragment != null){
+            if (mapFragment != null) {
                 mapFragment = new MapFragment();
             }
         } else if (menuItem.getItemId() == R.id.nav_profile) {
             fragmentClass = ProfileFragment.class;
-            if(profileFragment != null){
+            if (profileFragment != null) {
                 profileFragment = new ProfileFragment();
             }
         } else {

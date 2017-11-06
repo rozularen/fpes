@@ -3,11 +3,8 @@ package com.argandevteam.fpes.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,10 +25,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -120,12 +112,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     private void updateProfileDescription() {
-        if(!isSaving) {
+        if (!isSaving) {
             updateProfile.setText("Guardar Cambios");
             profileDescription.setVisibility(View.GONE);
             descriptionInput.setVisibility(View.VISIBLE);
             isSaving = true;
-        }else{
+        } else {
             updateProfile.setText("Actualizar Perfil");
             profileDescription.setVisibility(View.VISIBLE);
             descriptionInput.setVisibility(View.GONE);
