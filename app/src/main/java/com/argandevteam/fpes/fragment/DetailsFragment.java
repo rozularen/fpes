@@ -24,9 +24,9 @@ import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.adapter.ReviewsAdapter;
-import com.argandevteam.fpes.model.Centre;
-import com.argandevteam.fpes.model.Review;
-import com.argandevteam.fpes.model.User;
+import com.argandevteam.fpes.mvp.data.Centre;
+import com.argandevteam.fpes.mvp.data.Review;
+import com.argandevteam.fpes.mvp.data.User;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.maps.CameraUpdate;

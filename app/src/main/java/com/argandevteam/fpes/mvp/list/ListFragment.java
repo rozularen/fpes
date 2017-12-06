@@ -1,9 +1,11 @@
-package com.argandevteam.fpes.fragment;
+package com.argandevteam.fpes.mvp.list;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +17,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.adapter.CentreRecyclerAdapter;
-import com.argandevteam.fpes.model.Centre;
+import com.argandevteam.fpes.adapter.CentresAdapter;
+import com.argandevteam.fpes.fragment.DetailsFragment;
+import com.argandevteam.fpes.mvp.data.Centre;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.database.DataSnapshot;
@@ -39,9 +44,9 @@ import butterknife.ButterKnife;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class CentreFragment extends Fragment {
+public class ListFragment extends Fragment implements ListContract.View {
 
-    private static final String TAG = "CentreFragment";
+    private static final String TAG = "ListFragment";
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
@@ -51,17 +56,20 @@ public class CentreFragment extends Fragment {
 
     @BindView(R.id.adView)
     AdView mAdView;
-    CentreRecyclerAdapter centreRecyclerAdapter;
+    CentresAdapter mAdapter;
     private OnListFragmentInteractionListener mListener;
     private List<Centre> myList;
     private DatabaseReference mDatabase;
     private DatabaseReference centresReviewsRef;
+    private DatabaseReference centresRef;
+
+    private ListContract.Presenter mPresenter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public CentreFragment() {
+    public ListFragment() {
 
     }
 
@@ -90,6 +98,8 @@ public class CentreFragment extends Fragment {
         setHasOptionsMenu(true);
         FirebaseDatabase instance = FirebaseDatabase.getInstance();
         mDatabase = instance.getReference();
+
+        centresRef = mDatabase.child("centres");
         centresReviewsRef = mDatabase.child("centres-reviews");
 
         mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
@@ -99,7 +109,7 @@ public class CentreFragment extends Fragment {
                     Centre centre = centreSnapshot.getValue(Centre.class);
                     myList.add(centre);
                 }
-                centreRecyclerAdapter.notifyDataSetChanged();
+                mAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
@@ -117,9 +127,9 @@ public class CentreFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        centreRecyclerAdapter = new CentreRecyclerAdapter(getActivity(), myList, mListener);
-        recyclerView.setAdapter(centreRecyclerAdapter);
-        centreRecyclerAdapter.setOnItemClickListener(new CentreRecyclerAdapter.ItemClickListener() {
+        mAdapter = new CentresAdapter(getActivity(), myList, mListener);
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new CentresAdapter.ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
 
@@ -153,7 +163,6 @@ public class CentreFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
-
     }
 
     @Override
@@ -165,14 +174,42 @@ public class CentreFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            SearchFragment fragment = new SearchFragment();
+            AlertDialog filterDialog = null;
+            View filterView = LayoutInflater.from(getContext()).inflate(R.layout.filter_dialog, null);
 
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.frame_layout, fragment, fragment.getTag())
-                    .addToBackStack(null)
-                    .commit();
+            final RadioButton cbPrivate = (RadioButton) filterView.findViewById(R.id.cb_private);
+            final RadioButton cbPublic = (RadioButton) filterView.findViewById(R.id.cb_public);
+
+            filterDialog = new AlertDialog.Builder(getContext())
+                    .setTitle("Filtrar")
+                    .setView(filterView)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            myList.clear();
+                            Log.d(TAG, "onClick: ");
+                            if (cbPrivate.isChecked()) {
+                                Log.d(TAG, "onClick: cbPrivate is checked");
+                                centresRef.orderByChild("nature").equalTo("Centro Privado").addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot data) {
+                                        for (DataSnapshot dataSnapshot : data.getChildren()) {
+                                            Centre centre = dataSnapshot.getValue(Centre.class);
+                                            myList.add(centre);
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.d(TAG, "onCancelled: ");
+                                    }
+                                });
+                            }
+                        }
+                    })
+                    .create();
+            filterDialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -181,6 +218,21 @@ public class CentreFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search_menu, menu);
+    }
+
+    @Override
+    public void setPresenter(ListContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void showCentres(List<Centre> centreList) {
+        mAdapter.replaceData(centreList);
+    }
+
+    @Override
+    public void showLoadingCentresError() {
+        Toast.makeText(getContext(), "Can't get Centres!", Toast.LENGTH_SHORT).show();
     }
 
 

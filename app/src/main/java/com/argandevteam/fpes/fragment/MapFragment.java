@@ -24,7 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.model.Centre;
+import com.argandevteam.fpes.mvp.data.Centre;
+import com.argandevteam.fpes.mvp.list.ListFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -172,7 +173,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-                                CentreFragment fragment = new CentreFragment();
+                                ListFragment fragment = new ListFragment();
                                 supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, fragment.getTag()).commit();
                             }
                         })

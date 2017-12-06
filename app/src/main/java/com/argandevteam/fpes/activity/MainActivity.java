@@ -23,10 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.fragment.CentreFragment;
+import com.argandevteam.fpes.mvp.list.ListFragment;
 import com.argandevteam.fpes.fragment.MapFragment;
 import com.argandevteam.fpes.fragment.ProfileFragment;
-import com.argandevteam.fpes.model.Centre;
+import com.argandevteam.fpes.mvp.data.Centre;
 import com.argandevteam.fpes.ui.CustomLinearLayout;
 import com.argandevteam.fpes.utils.CircleTransform;
 import com.facebook.CallbackManager;
@@ -45,7 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.picasso.transformations.BlurTransformation;
 
-public class MainActivity extends AppCompatActivity implements CentreFragment.OnListFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "MainActivity";
     private static final int GET_FROM_GALLERY = 1;
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
         // Set the list's click listener
         mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        CentreFragment fragment = new CentreFragment();
+        ListFragment fragment = new ListFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment, fragment.getTag()).commit();
 
         mDrawerList.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements CentreFragment.On
                 profileFragment = new ProfileFragment();
             }
         } else {
-            fragmentClass = CentreFragment.class;
+            fragmentClass = ListFragment.class;
         }
 
         try {

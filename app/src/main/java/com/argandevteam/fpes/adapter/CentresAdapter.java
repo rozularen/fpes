@@ -11,9 +11,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.fragment.CentreFragment.OnListFragmentInteractionListener;
-import com.argandevteam.fpes.model.Centre;
-import com.argandevteam.fpes.model.Review;
+import com.argandevteam.fpes.mvp.data.Centre;
+import com.argandevteam.fpes.mvp.data.Review;
+import com.argandevteam.fpes.mvp.list.ListFragment.OnListFragmentInteractionListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,17 +32,18 @@ import butterknife.ButterKnife;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAdapter.ViewHolder> {
+public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHolder> {
     private static final String TAG = "RecyclerViewAdapter";
-    private final List<Centre> mValues;
+    private List<Centre> mCentresList;
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
     private ItemClickListener listener;
     private DatabaseReference mDatabase;
     private DatabaseReference centresReviewsRef;
-    public CentreRecyclerAdapter(Context context, List<Centre> items, OnListFragmentInteractionListener listener) {
+
+    public CentresAdapter(Context context, List<Centre> items, OnListFragmentInteractionListener listener) {
         this.context = context;
-        mValues = items;
+        mCentresList = items;
         mListener = listener;
         mDatabase = FirebaseDatabase.getInstance().getReference();
         centresReviewsRef = mDatabase.child("centres-reviews");
@@ -58,7 +59,7 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Centre centre = mValues.get(position);
+        Centre centre = mCentresList.get(position);
         calculateCentreAverageRating(holder, centre);
         holder.centreSpecificDen.setText(centre.specific_den);
         holder.centreAddress.setText(centre.address);
@@ -79,7 +80,7 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mCentresList.size();
     }
 
     private void calculateCentreAverageRating(final ViewHolder viewHolder, final Centre centre) {
@@ -105,6 +106,11 @@ public class CentreRecyclerAdapter extends RecyclerView.Adapter<CentreRecyclerAd
 
             }
         });
+    }
+
+    public void replaceData(List<Centre> centreList) {
+        mCentresList = centreList;
+        notifyDataSetChanged();
     }
 
 

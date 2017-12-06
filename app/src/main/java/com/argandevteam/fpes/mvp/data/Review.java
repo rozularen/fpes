@@ -1,4 +1,4 @@
-package com.argandevteam.fpes.model;
+package com.argandevteam.fpes.mvp.data;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
