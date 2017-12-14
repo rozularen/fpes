@@ -53,6 +53,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     TextView loginLink;
     @BindView(R.id.signup_button)
     Button signUpButton;
+
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;

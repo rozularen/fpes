@@ -29,10 +29,29 @@ public class CentresRepository implements CentresDataSource {
 
     @Override
     public void getCentres(LoadCentresCallback callback) {
-        if(callback != null) {
+        if (callback != null) {
             //TODO: first from cache, if not possible, then from local and finally from remote
             getCentresFromRemoteDataSource(callback);
         }
+    }
+
+    @Override
+    public void getCentre(int tripId, LoadCentreCallback callback) {
+        getCentreFromRemoteDataSource(tripId, callback);
+    }
+
+    private void getCentreFromRemoteDataSource(int tripId, final LoadCentreCallback callback) {
+        mCentresRemoteDataSource.getCentre(tripId, new LoadCentreCallback() {
+            @Override
+            public void onCentreCallback(Centre centre) {
+                callback.onCentreCallback(centre);
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        });
     }
 
     private void getCentresFromRemoteDataSource(final LoadCentresCallback callback) {
@@ -50,8 +69,5 @@ public class CentresRepository implements CentresDataSource {
         });
     }
 
-    @Override
-    public void getCentre(String tripId, LoadCentreCallback callback) {
 
-    }
 }

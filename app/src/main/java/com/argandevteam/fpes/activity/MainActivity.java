@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.mvp.list.ListFragment;
 import com.argandevteam.fpes.fragment.MapFragment;
-import com.argandevteam.fpes.fragment.ProfileFragment;
+import com.argandevteam.fpes.mvp.profile.ProfileFragment;
 import com.argandevteam.fpes.mvp.data.Centre;
 import com.argandevteam.fpes.ui.CustomLinearLayout;
 import com.argandevteam.fpes.utils.CircleTransform;

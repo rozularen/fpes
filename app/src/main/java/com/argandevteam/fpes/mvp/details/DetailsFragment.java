@@ -1,4 +1,4 @@
-package com.argandevteam.fpes.fragment;
+package com.argandevteam.fpes.mvp.details;
 
 
 import android.content.Context;

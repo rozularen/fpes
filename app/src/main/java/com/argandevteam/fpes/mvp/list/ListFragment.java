@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.adapter.CentresAdapter;
-import com.argandevteam.fpes.fragment.DetailsFragment;
+import com.argandevteam.fpes.mvp.details.DetailsFragment;
 import com.argandevteam.fpes.mvp.data.Centre;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;

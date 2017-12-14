@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.mvp.data.Centre;
+import com.argandevteam.fpes.mvp.details.DetailsFragment;
 import com.argandevteam.fpes.mvp.list.ListFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
