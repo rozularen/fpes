@@ -1,6 +1,5 @@
 package com.argandevteam.fpes.activity;
 
-import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,30 +19,25 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.mvp.list.ListFragment;
 import com.argandevteam.fpes.fragment.MapFragment;
-import com.argandevteam.fpes.mvp.profile.ProfileFragment;
 import com.argandevteam.fpes.mvp.data.Centre;
+import com.argandevteam.fpes.mvp.list.ListFragment;
+import com.argandevteam.fpes.mvp.list.ListPresenter;
+import com.argandevteam.fpes.mvp.login.LoginFragment;
+import com.argandevteam.fpes.mvp.login.LoginPresenter;
+import com.argandevteam.fpes.mvp.profile.ProfileFragment;
 import com.argandevteam.fpes.ui.CustomLinearLayout;
-import com.argandevteam.fpes.utils.CircleTransform;
 import com.facebook.CallbackManager;
-import com.facebook.login.LoginManager;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 public class MainActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener, GoogleApiClient.OnConnectionFailedListener {
 
@@ -58,59 +52,36 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
     NavigationView mDrawerList;
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.frame_layout)
+    @BindView(R.id.container)
     FrameLayout frameLayout;
     ProfileFragment profileFragment;
     MapFragment mapFragment;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference mDatabase;
+
     private MainActivity activity;
-    private GoogleApiClient mGoogleApiClient;
-    private CallbackManager callbackManager;
+    private LoginPresenter mLoginPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
+
         ButterKnife.bind(this);
 
         MobileAds.initialize(this, "ca-app-pub-5632055827237755~3780528429");
         activity = this;
+
         View header = mDrawerList.getHeaderView(0);
         customLinearLayout = (CustomLinearLayout) header.findViewById(R.id.custom_linear_layout);
         drawerHeaderName = (TextView) header.findViewById(R.id.drawer_header_name);
         drawerUserPhoto = (ImageView) header.findViewById(R.id.drawer_user_icon);
 
-        setUpFirebase();
-        setUpGoogleSignIn();
-
         setSupportActionBar(mToolbar);
-
         mToolbar.setTitle(R.string.app_name);
-        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                if (currentUser != null) {
-                    drawerHeaderName.setText(currentUser.getDisplayName());
-                    Picasso.with(activity).load(currentUser.getPhotoUrl()).transform(new CircleTransform()).into(drawerUserPhoto);
-                    Picasso.with(activity).load(currentUser.getPhotoUrl()).transform(new BlurTransformation(activity)).into(customLinearLayout);
-                } else {
-                    Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(loginIntent);
-                    finish();
-                }
-            }
-        });
-
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 mToolbar, R.string.drawer_open, R.string.drawer_closed);
         // Set the list's click listener
         mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        ListFragment fragment = new ListFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, fragment, fragment.getTag()).commit();
 
         mDrawerList.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -120,40 +91,19 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
             }
         });
 
-    }
 
-    private void setUpFirebase() {
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Toast.makeText(MainActivity.this, "User: " + user.getEmail() + " is logged in.", Toast.LENGTH_SHORT).show();
+        // Start
+        LoginFragment loginFragment = new LoginFragment();
 
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Toast.makeText(MainActivity.this, "User logged out.", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, loginFragment, loginFragment.getTag())
+                .commit();
 
-    }
+        mLoginPresenter = new LoginPresenter(loginFragment);
 
-    private void setUpGoogleSignIn() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken("64500376949-1erlve8i66osmdfq6l6kc3p4e7igivhg.apps.googleusercontent.com")
-                .build();
+        // Done
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
     }
 
     private void selectDrawerItem(MenuItem menuItem) {
@@ -166,9 +116,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
             dialog.setTitle("Cerrar sesion").setPositiveButton("Salir", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    FirebaseAuth.getInstance().signOut();
-                    Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                    LoginManager.getInstance().logOut();
+                    mLoginPresenter.signOff();
 
                 }
             }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -177,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
                     dialog.dismiss();
                 }
             }).show();
+            navigateToLogin();
 
         } else if (menuItem.getItemId() == R.id.nav_map) {
             fragmentClass = MapFragment.class;
@@ -196,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
             if (fragmentClass != null) {
                 fragment = (Fragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, fragment.getTag()).commit();
+                fragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.getTag()).commit();
                 setTitle(menuItem.getTitle());
             }
         } catch (Exception e) {
@@ -222,18 +171,6 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
 
     }
 
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.d(TAG, "handleIntent: " + query);
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: ");
-    }
-
 
     @Override
     public void onListFragmentInteraction(Centre item) {
@@ -246,5 +183,34 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
         if (requestCode == GET_FROM_GALLERY && resultCode == -1) {
             profileFragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    //Navigation methods
+
+    public void navigateToHome() {
+        ListFragment listFragment = new ListFragment();
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, listFragment)
+                .commit();
+
+        ListPresenter listPresenter = new ListPresenter(listFragment);
+    }
+
+    public void navigateToLogin() {
+        LoginFragment loginFragment = new LoginFragment();
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, loginFragment)
+                .commit();
+
+        mLoginPresenter = new LoginPresenter(loginFragment);
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

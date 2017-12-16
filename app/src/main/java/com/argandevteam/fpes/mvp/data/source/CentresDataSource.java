@@ -9,9 +9,9 @@ import java.util.List;
  */
 
 public interface CentresDataSource {
-    List<Centre> getCentres(LoadCentresCallback callback);
+    void getCentres(LoadCentresCallback callback);
 
-    Centre getCentre(int tripId, LoadCentreCallback callback);
+    void getCentre(int tripId, LoadCentreCallback callback);
 
     interface LoadCentresCallback {
         void onCentresLoaded(List<Centre> centreList);

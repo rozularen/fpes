@@ -4,7 +4,6 @@ import com.argandevteam.fpes.mvp.data.Centre;
 import com.argandevteam.fpes.mvp.data.source.CentresDataSource;
 import com.argandevteam.fpes.mvp.data.source.CentresRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +14,12 @@ public class ListPresenter implements ListContract.Presenter {
 
     private ListContract.View mView;
     private CentresRepository mCentresRepository;
+
+    public ListPresenter(ListContract.View view) {
+        if (view != null) {
+            mView = view;
+        }
+    }
 
     public ListPresenter(ListContract.View view, CentresRepository centresRepository) {
         if (centresRepository != null) {
@@ -35,7 +40,7 @@ public class ListPresenter implements ListContract.Presenter {
         mCentresRepository.getCentres(new CentresDataSource.LoadCentresCallback() {
             @Override
             public void onCentresLoaded(List<Centre> centreList) {
-               mView.showCentres(centreList);
+                mView.showCentres(centreList);
             }
 
             @Override

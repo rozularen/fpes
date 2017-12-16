@@ -22,8 +22,9 @@ import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.adapter.CentresAdapter;
-import com.argandevteam.fpes.mvp.details.DetailsFragment;
+import com.argandevteam.fpes.mvp.BaseFragment;
 import com.argandevteam.fpes.mvp.data.Centre;
+import com.argandevteam.fpes.mvp.details.DetailsFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.database.DataSnapshot;
@@ -44,7 +45,7 @@ import butterknife.ButterKnife;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ListFragment extends Fragment implements ListContract.View {
+public class ListFragment extends BaseFragment implements ListContract.View {
 
     private static final String TAG = "ListFragment";
 
@@ -142,7 +143,7 @@ public class ListFragment extends Fragment implements ListContract.View {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager
                         .beginTransaction()
-                        .replace(R.id.frame_layout, detailsFragment, detailsFragment.getTag())
+                        .replace(R.id.container, detailsFragment, detailsFragment.getTag())
                         .addToBackStack(null)
                         .commit();
 
@@ -223,6 +224,11 @@ public class ListFragment extends Fragment implements ListContract.View {
     @Override
     public void setPresenter(ListContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public Context getViewContext() {
+        return getContext();
     }
 
     @Override

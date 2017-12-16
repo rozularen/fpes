@@ -24,24 +24,11 @@
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
-        <activity
-            android:name=".activity.LoginActivity"
-            android:windowSoftInputMode="stateHidden">
-            <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.RegisterActivity"
-            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

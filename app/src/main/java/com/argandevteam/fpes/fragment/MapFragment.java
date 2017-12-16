@@ -175,7 +175,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                             public void onClick(DialogInterface dialog, int which) {
                                 FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
                                 ListFragment fragment = new ListFragment();
-                                supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, fragment.getTag()).commit();
+                                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.getTag()).commit();
                             }
                         })
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
@@ -251,7 +251,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame_layout, detailsFragment, detailsFragment.getTag());
+        fragmentTransaction.replace(R.id.container, detailsFragment, detailsFragment.getTag());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

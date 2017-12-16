@@ -34,9 +34,9 @@ import butterknife.ButterKnife;
  */
 public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHolder> {
     private static final String TAG = "RecyclerViewAdapter";
-    private List<Centre> mCentresList;
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
+    private List<Centre> mCentresList;
     private ItemClickListener listener;
     private DatabaseReference mDatabase;
     private DatabaseReference centresReviewsRef;
