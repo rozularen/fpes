@@ -1,6 +1,7 @@
 package com.argandevteam.fpes.mvp.login;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.activity.MainActivity;
 import com.argandevteam.fpes.mvp.BaseFragment;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,28 +51,28 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     @BindView(R.id.link_signup)
     TextView signupLink;
 
-    private LoginContract.Presenter mPresenter;
-    private GoogleApiClient mGoogleApiClient;
+    private LoginContract.Presenter presenter;
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
+    public static LoginFragment newInstance() {
+        return new LoginFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         ButterKnife.bind(this, view);
 
-//        fbLogin.setReadPermissions("email", "public_profile");
         fbLogin.setOnClickListener(this);
         googleLoginButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
 
-        mainActivity = (MainActivity) getActivity();
 
         return view;
     }
@@ -82,7 +81,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     @Override
     public void setPresenter(LoginContract.Presenter presenter) {
         if (presenter != null) {
-            mPresenter = presenter;
+            this.presenter = presenter;
         }
     }
 
@@ -92,16 +91,21 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     }
 
     @Override
+    public Activity getViewActivity() {
+        return getActivity();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        mPresenter.start();
-        mPresenter.setAuthListener();
+        presenter.start();
+        presenter.setAuthListener();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPresenter.removeAuthListener();
+        presenter.removeAuthListener();
     }
 
     @Override
@@ -111,13 +115,13 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
                 String email = emailText.getText().toString();
                 String password = passwordText.getText().toString();
 
-                mPresenter.doLoginWithEmailAndPassword(email, password);
+                presenter.doLoginWithEmailAndPassword(email, password);
                 break;
             case R.id.google_login_button:
-                mPresenter.doLoginWithGoogle();
+                presenter.doLoginWithGoogle();
                 break;
             case R.id.fb_login_button:
-                mPresenter.doLoginWithFacebook();
+                presenter.doLoginWithFacebook();
                 break;
             default:
                 break;
@@ -127,7 +131,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPresenter.onActivityResult(requestCode, resultCode, data);
+        presenter.onResult(requestCode, resultCode, data);
     }
 
     @Override

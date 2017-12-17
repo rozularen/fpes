@@ -20,9 +20,11 @@ public class LoginContract {
 
     interface Presenter extends BasePresenter {
 
-        void onStop();
+//        void setUpGoogleSignIn(MainActivity activity);
 
-        void onActivityResult(int requestCode, int resultCode, Intent data);
+//        void onStop();
+
+        void onResult(int requestCode, int resultCode, Intent data);
 
         void setAuthListener();
 
@@ -34,6 +36,7 @@ public class LoginContract {
 
         void doLoginWithFacebook();
 
-        void signOff();
+        void logOff();
+
     }
 }

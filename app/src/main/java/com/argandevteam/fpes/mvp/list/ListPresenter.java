@@ -36,6 +36,11 @@ public class ListPresenter implements ListContract.Presenter {
         loadCentres();
     }
 
+    @Override
+    public void onDestroy() {
+        mView = null;
+    }
+
     private void loadCentres() {
         mCentresRepository.getCentres(new CentresDataSource.LoadCentresCallback() {
             @Override

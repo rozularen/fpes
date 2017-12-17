@@ -1,5 +1,6 @@
 package com.argandevteam.fpes.mvp.list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -74,10 +75,8 @@ public class ListFragment extends BaseFragment implements ListContract.View {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        progressBar.setVisibility(View.VISIBLE);
+    public static ListFragment newInstance() {
+        return new ListFragment();
     }
 
     @Override
@@ -232,6 +231,11 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     }
 
     @Override
+    public Activity getViewActivity() {
+        return getActivity();
+    }
+
+    @Override
     public void showCentres(List<Centre> centreList) {
         mAdapter.replaceData(centreList);
     }
@@ -255,5 +259,9 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Centre item);
+    }
+
+    public interface OnLogOffListener {
+        void onLogOff();
     }
 }

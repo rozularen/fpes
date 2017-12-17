@@ -6,4 +6,6 @@ package com.argandevteam.fpes.mvp;
 
 public interface BasePresenter {
     void start();
+
+    void onDestroy();
 }
