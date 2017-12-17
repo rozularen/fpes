@@ -16,13 +16,14 @@ public class LoginContract {
         void navigateToHome();
 
         void showFirebaseLoginFailed();
+
+        void setPasswordError();
+
+        void setEmailError();
+
     }
 
     interface Presenter extends BasePresenter {
-
-//        void setUpGoogleSignIn(MainActivity activity);
-
-//        void onStop();
 
         void onResult(int requestCode, int resultCode, Intent data);
 

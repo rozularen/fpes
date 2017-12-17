@@ -27,6 +27,7 @@ import com.argandevteam.fpes.mvp.list.ListFragment;
 import com.argandevteam.fpes.mvp.list.ListPresenter;
 import com.argandevteam.fpes.mvp.login.LoginFragment;
 import com.argandevteam.fpes.mvp.login.LoginPresenter;
+import com.argandevteam.fpes.mvp.login.facebook.FacebookSignIn;
 import com.argandevteam.fpes.mvp.login.google.GoogleSignIn;
 import com.argandevteam.fpes.mvp.profile.ProfileFragment;
 import com.argandevteam.fpes.ui.CustomLinearLayout;
@@ -54,9 +55,12 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
     MapFragment mapFragment;
 
     private MainActivity activity;
+
     private LoginPresenter loginPresenter;
-    private GoogleSignIn googleSignInPresenter;
     private LoginFragment loginFragment;
+    private GoogleSignIn googleSignInPresenter;
+
+    private FacebookSignIn facebookSignInPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,15 +111,16 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
         loginPresenter = new LoginPresenter(loginFragment);
 
         googleSignInPresenter = new GoogleSignIn(this, loginPresenter);
+        facebookSignInPresenter = new FacebookSignIn(this, loginPresenter);
 
         googleSignInPresenter.createGoogleClient();
 
         loginPresenter.setGoogleSignInPresenter(googleSignInPresenter);
+        loginPresenter.setFacebookSignInPresenter(facebookSignInPresenter);
         // Done
     }
 
     private void selectDrawerItem(MenuItem menuItem) {
-
         Fragment fragment = null;
         Class fragmentClass = null;
 
@@ -215,6 +220,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
         loginPresenter = new LoginPresenter(loginFragment);
 
         loginPresenter.setGoogleSignInPresenter(googleSignInPresenter);
+        loginPresenter.setFacebookSignInPresenter(facebookSignInPresenter);
     }
 
 

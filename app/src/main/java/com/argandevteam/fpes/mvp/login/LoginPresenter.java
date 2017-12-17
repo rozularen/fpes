@@ -1,8 +1,8 @@
 package com.argandevteam.fpes.mvp.login;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.argandevteam.fpes.mvp.data.source.UsersRepository;
@@ -22,7 +22,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginPresenter implements LoginContract.Presenter {
 
     private static final String TAG = "LoginPresenter";
-
 
     private LoginContract.View view;
 
@@ -80,17 +79,13 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void doLoginWithGoogle() {
-        if ((Activity) view.getViewActivity() != null) {
-            Log.d(TAG, "doLoginWithGoogle: HAY ACTIVITY");
-        } else {
-            Log.d(TAG, "doLoginWithGoogle: NADA");
-        }
         googleSignInPresenter.logIn();
     }
 
     @Override
     public void onResult(int requestCode, int resultCode, Intent data) {
         googleSignInPresenter.onResult(requestCode, resultCode, data);
+        facebookSignInPresenter.onResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -105,21 +100,52 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void doLoginWithEmailAndPassword(String email, String password) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (!task.isSuccessful()) {
-                            view.showFirebaseLoginFailed();
-                        } else {
+        //validate input and set errors correspondingly
+        if (validateString(email)) {
+            if (validateString(password))
+                firebaseAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (!task.isSuccessful()) {
+                                    view.showFirebaseLoginFailed();
+                                } else {
 //                            if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
 //                                addUser(task.getResult().getUser());
 //                                sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
 //                            }
-                        }
-                    }
-                });
+                                }
+                            }
+                        });
+            else {
+                view.setPasswordError();
+            }
+        } else {
+
+            view.setEmailError();
+        }
     }
+
+    private boolean validateString(String text) {
+        boolean isValid = true;
+
+        if (text == null) {
+            isValid = false;
+        }
+
+        if (TextUtils.isEmpty(text)) {
+            isValid = false;
+        }
+
+        if (text != null) {
+            if (text.length() == 0) {
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+
 
     public void signInWithCredentials(AuthCredential credential) {
 
@@ -142,4 +168,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
 
+    public void setFacebookSignInPresenter(FacebookSignIn facebookSignInPresenter) {
+        this.facebookSignInPresenter = facebookSignInPresenter;
+    }
 }

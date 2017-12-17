@@ -73,7 +73,6 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         googleLoginButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
 
-
         return view;
     }
 
@@ -142,5 +141,16 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     @Override
     public void showFirebaseLoginFailed() {
         Toast.makeText(getContext(), "Login with Firebase failed!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setPasswordError() {
+        passwordInputLayout.setError("Password is null");
+
+    }
+
+    @Override
+    public void setEmailError() {
+        emailInputLayout.setError("Email is null");
     }
 }
