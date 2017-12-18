@@ -30,7 +30,7 @@
         android:scrollbars="vertical"
         android:visibility="gone"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.argandevteam.fpes.mvp.list.ListFragment"
+        tools:context="com.argandevteam.fpes.centres.ListFragment"
         tools:listitem="@layout/centre_card"
         tools:visibility="visible" />
 
