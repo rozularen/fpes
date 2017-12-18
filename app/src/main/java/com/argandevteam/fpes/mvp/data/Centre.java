@@ -51,8 +51,9 @@ public class Centre implements Parcelable {
     }
 
     public Centre(String address, int uid, String province, String city, String nature,
-                  String municipality, String thumbnail_url,
-                  int postal_code, String specific_den, String generic_den, int num_ratings, int num_reviews, double lat, double lon, HashMap<String, Boolean> reviews) {
+                  String municipality, String thumbnail_url, int postal_code, String specific_den,
+                  String generic_den, int num_ratings, int num_reviews, double lat, double lon,
+                  HashMap<String, Boolean> reviews) {
         this.id = uid;
         this.address = address;
         this.province = province;
@@ -88,7 +89,7 @@ public class Centre implements Parcelable {
         num_ratings = in.readInt();
         num_reviews = in.readInt();
         reviews = in.readHashMap(null);
-//        in.readList(reviews, null);
+        //        in.readList(reviews, null);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class Centre implements Parcelable {
         dest.writeString(thumbnail_url);
         dest.writeDouble(lat);
         dest.writeDouble(lon);
-//        dest.writeList(reviews);
+        //        dest.writeList(reviews);
         dest.writeMap(reviews);
     }
 

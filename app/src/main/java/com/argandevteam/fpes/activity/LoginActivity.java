@@ -51,7 +51,8 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class LoginActivity extends AppCompatActivity
+        implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN_GOOGLE = 1;
@@ -74,7 +75,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @BindView(R.id.link_signup)
     TextView signupLink;
 
-//    private GoogleApiClient mGoogleApiClient;
+    //    private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private LoginManager mLoginManager;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -84,11 +85,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private AuthCredential googleCredential;
     private SharedPreferences sharedPreferences;
 
-//    @BindView(R.id.sign_in_button)
-//    SignInButton googleLoginButton;
+    //    @BindView(R.id.sign_in_button)
+    //    SignInButton googleLoginButton;
 
-    private static void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
-                                                   String msg) {
+    private static void toggleTextInputLayoutError(
+            @NonNull
+                    TextInputLayout textInputLayout,
+            String msg) {
         textInputLayout.setError(msg);
         if (msg == null) {
             textInputLayout.setErrorEnabled(false);
@@ -104,7 +107,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         ButterKnife.bind(this);
 
         sharedPreferences = getSharedPreferences(Constants.ApplicationTag, Activity.MODE_PRIVATE);
-
 
         mAuth = FirebaseAuth.getInstance();
         mLoginManager = LoginManager.getInstance();
@@ -136,15 +138,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                Toast.makeText(LoginActivity.this, "prueba" + exception.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "prueba" + exception.toString(), Toast.LENGTH_SHORT)
+                        .show();
             }
         };
-        mLoginManager.registerCallback(mCallbackManager,
-                callback);
+        mLoginManager.registerCallback(mCallbackManager, callback);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(
+                    @NonNull
+                            FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
@@ -155,7 +159,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     finish();
                 } else {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-
                 }
             }
         };
@@ -166,52 +169,58 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void setUpGoogleSignIn() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken("64500376949-1erlve8i66osmdfq6l6kc3p4e7igivhg.apps.googleusercontent.com")
-                .build();
+        GoogleSignInOptions gso =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+                        .requestIdToken(
+                                "64500376949-1erlve8i66osmdfq6l6kc3p4e7igivhg.apps.googleusercontent.com")
+                        .build();
 
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-//                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//                .build();
+        //        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        //                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+        //                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+        //                .build();
     }
 
     private void signInWithCredentials(final AuthCredential credential) {
         Log.d(TAG, "handleFirebaseAuthWithProvider:" + credential.getProvider());
 
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(
+                            @NonNull
+                                    Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                if (!task.isSuccessful()) {
-                    Log.w(TAG, "signInWithCredential", task.getException());
-                    Toast.makeText(LoginActivity.this, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
-                        addUser(task.getResult().getUser());
-                        sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
+                                addUser(task.getResult().getUser());
+                                sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
     }
 
     private void addUser(FirebaseUser user) {
         String description = "Escribe tu biografía";
-        User newUser = new User(user.getUid(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString(), description, new HashMap<String, Boolean>());
+        User newUser = new User(user.getUid(), user.getEmail(), user.getDisplayName(),
+                user.getPhotoUrl().toString(), description, new HashMap<String, Boolean>());
         userRef.child(user.getUid()).setValue(newUser);
     }
 
     private void signInEmailAndPassword(String email, String password) {
 
-
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(
+                            @NonNull
+                                    Task<AuthResult> task) {
                         Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
@@ -219,8 +228,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithEmail:failed", task.getException());
-                            Toast.makeText(LoginActivity.this, "Nopeee",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Nopeee", Toast.LENGTH_SHORT).show();
                         } else {
                             if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
                                 addUser(task.getResult().getUser());
@@ -247,7 +255,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Log.d("Google_Sign_In", "Login ");
             }
         }
-
     }
 
     private AuthCredential getCredential(GoogleSignInAccount acct) {
@@ -269,7 +276,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(
+            @NonNull
+                    ConnectionResult connectionResult) {
         Toast.makeText(this, "Connection Failed", Toast.LENGTH_SHORT).show();
     }
 
@@ -280,10 +289,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(registerIntent);
                 break;
-//            case R.id.sign_in_button:
-//                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-//                startActivityForResult(signInIntent, 1);
-//                break;
+            //            case R.id.sign_in_button:
+            //                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            //                startActivityForResult(signInIntent, 1);
+            //                break;
             case R.id.login_button:
                 if (validateInput(emailText.getText().toString(), passwordText.getText().toString())) {
                     signInEmailAndPassword(emailText.getText().toString(), passwordText.getText().toString());
@@ -293,8 +302,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 mLoginManager.logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
                 break;
             case R.id.google_login_button:
-//                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-//                startActivityForResult(signInIntent, 1);
+                //                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                //                startActivityForResult(signInIntent, 1);
             default:
                 break;
         }
@@ -317,8 +326,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         return isValidInput;
     }
 
-    private void setError(@NonNull TextInputLayout textInputLayout,
-                          String msg) {
+    private void setError(
+            @NonNull
+                    TextInputLayout textInputLayout, String msg) {
         textInputLayout.setError(msg);
         if (msg == null) {
             textInputLayout.setErrorEnabled(false);
@@ -330,8 +340,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void clearFocus() {
         View view = this.getCurrentFocus();
         if (view != null && view instanceof EditText) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
-                    .INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             view.clearFocus();
         }

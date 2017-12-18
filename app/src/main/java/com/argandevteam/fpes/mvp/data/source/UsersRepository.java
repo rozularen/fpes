@@ -6,8 +6,6 @@ package com.argandevteam.fpes.mvp.data.source;
 
 public class UsersRepository implements UsersDataSource {
 
-
-
     @Override
     public void getUser(int id, LoadUserCallback callback) {
 

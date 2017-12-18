@@ -14,7 +14,6 @@ public class UsersRemoteDataSource implements UsersDataSource {
     private DatabaseReference mDatabase;
     private DatabaseReference mUsersReference;
 
-
     public UsersRemoteDataSource() {
         instance = FirebaseDatabase.getInstance();
         mDatabase = instance.getReference();
@@ -23,7 +22,7 @@ public class UsersRemoteDataSource implements UsersDataSource {
 
     @Override
     public void getUser(int id, LoadUserCallback callback) {
-//        mUsersReference = mDatabase.child();
+        //        mUsersReference = mDatabase.child();
     }
 
     @Override

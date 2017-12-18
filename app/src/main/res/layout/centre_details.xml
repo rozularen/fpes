@@ -98,8 +98,6 @@
             android:numStars="5" />
 
 
-
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -179,10 +177,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:drawableStart="@drawable/ic_person_outline_black"
-            android:gravity="center"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="6dp"
+            android:drawableStart="@drawable/ic_person_outline_black"
+            android:gravity="center"
             android:text="113 en total"
             android:textColor="@color/textColor" />
     </LinearLayout>

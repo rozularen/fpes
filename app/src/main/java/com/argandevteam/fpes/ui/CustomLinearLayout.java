@@ -22,11 +22,15 @@ public class CustomLinearLayout extends LinearLayout implements Target {
         super(context);
     }
 
-    public CustomLinearLayout(Context context, @Nullable AttributeSet attrs) {
+    public CustomLinearLayout(Context context,
+                              @Nullable
+                                      AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CustomLinearLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CustomLinearLayout(Context context,
+                              @Nullable
+                                      AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

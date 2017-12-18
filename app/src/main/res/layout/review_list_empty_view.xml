@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawableTop="@drawable/ic_info_black"
         android:gravity="center"
         android:paddingLeft="16dp"
-        android:drawableTop="@drawable/ic_info_black"
         android:paddingRight="16dp"
-        android:text="No hay ninguna opinión todavía! Se el primero en dejar una opinión"/>
+        android:text="No hay ninguna opinión todavía! Se el primero en dejar una opinión" />
 </LinearLayout>

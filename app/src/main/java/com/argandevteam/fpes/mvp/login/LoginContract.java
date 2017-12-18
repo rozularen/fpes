@@ -2,7 +2,6 @@ package com.argandevteam.fpes.mvp.login;
 
 import android.content.Intent;
 
-import com.argandevteam.fpes.activity.MainActivity;
 import com.argandevteam.fpes.mvp.BasePresenter;
 import com.argandevteam.fpes.mvp.BaseView;
 
@@ -13,6 +12,8 @@ import com.argandevteam.fpes.mvp.BaseView;
 public class LoginContract {
     interface View extends BaseView<Presenter> {
 
+        void navigateToRegister();
+
         void navigateToHome();
 
         void showFirebaseLoginFailed();
@@ -20,7 +21,6 @@ public class LoginContract {
         void setPasswordError();
 
         void setEmailError();
-
     }
 
     interface Presenter extends BasePresenter {
@@ -38,6 +38,5 @@ public class LoginContract {
         void doLoginWithFacebook();
 
         void logOff();
-
     }
 }

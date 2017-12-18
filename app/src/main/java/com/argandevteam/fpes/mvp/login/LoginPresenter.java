@@ -23,6 +23,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private static final String TAG = "LoginPresenter";
 
+    private static final int RC_SIGN_IN_G = 100;
+
     private LoginContract.View view;
 
     private UsersRepository usersRepository;
@@ -35,7 +37,9 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
         @Override
-        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        public void onAuthStateChanged(
+                @NonNull
+                        FirebaseAuth firebaseAuth) {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 //User is logged, notify MainActivity to change screen
@@ -54,7 +58,6 @@ public class LoginPresenter implements LoginContract.Presenter {
             this.view.setPresenter(this);
             firebaseAuth = FirebaseAuth.getInstance();
         }
-        Log.d(TAG, "LoginPresenter: HE CREADO UN PRESENTER");
     }
 
     @Override
@@ -84,8 +87,11 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void onResult(int requestCode, int resultCode, Intent data) {
-        googleSignInPresenter.onResult(requestCode, resultCode, data);
-        facebookSignInPresenter.onResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN_G) {
+            googleSignInPresenter.onResult(requestCode, resultCode, data);
+        } else {
+            facebookSignInPresenter.onResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -102,22 +108,24 @@ public class LoginPresenter implements LoginContract.Presenter {
     public void doLoginWithEmailAndPassword(String email, String password) {
         //validate input and set errors correspondingly
         if (validateString(email)) {
-            if (validateString(password))
+            if (validateString(password)) {
                 firebaseAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                            public void onComplete(
+                                    @NonNull
+                                            Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
                                     view.showFirebaseLoginFailed();
                                 } else {
-//                            if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
-//                                addUser(task.getResult().getUser());
-//                                sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
-//                            }
+                                    //                            if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
+                                    //                                addUser(task.getResult().getUser());
+                                    //                                sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
+                                    //                            }
                                 }
                             }
                         });
-            else {
+            } else {
                 view.setPasswordError();
             }
         } else {
@@ -146,13 +154,14 @@ public class LoginPresenter implements LoginContract.Presenter {
         return isValid;
     }
 
-
     public void signInWithCredentials(AuthCredential credential) {
 
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(
+                            @NonNull
+                                    Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
                             Log.d(TAG, "onComplete: AUTH FAILED");
                         } else {
@@ -162,11 +171,9 @@ public class LoginPresenter implements LoginContract.Presenter {
                 });
     }
 
-
     public void setGoogleSignInPresenter(GoogleSignIn googleSignInPresenter) {
         this.googleSignInPresenter = googleSignInPresenter;
     }
-
 
     public void setFacebookSignInPresenter(FacebookSignIn facebookSignInPresenter) {
         this.facebookSignInPresenter = facebookSignInPresenter;

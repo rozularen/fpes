@@ -20,7 +20,8 @@ public class User {
     public User() {
     }
 
-    public User(String uid, String email, String name, String user_image, String description, HashMap<String, Boolean> reviews) {
+    public User(String uid, String email, String name, String user_image, String description,
+                HashMap<String, Boolean> reviews) {
         this.uid = uid;
         this.name = name;
         this.email = email;

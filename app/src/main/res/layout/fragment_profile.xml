@@ -58,10 +58,10 @@
 
 
         <TextView
-            android:padding="4dp"
             android:id="@+id/profile_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="4dp"
             android:text="Técnico Superior en Desarrollo de Aplicaciones Multiplataforma"
             android:textColor="@color/textColor"
             android:textSize="14dp" />
@@ -71,8 +71,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Tecnico Superior en Desarrollo de Aplicaciones Multiplataforma"
-            android:textSize="14dp"
             android:text="Tecnico Superior en Desarrollo de Aplicaciones Multiplataforma"
+            android:textSize="14dp"
             android:visibility="gone"
             tools:visibility="visible" />
 

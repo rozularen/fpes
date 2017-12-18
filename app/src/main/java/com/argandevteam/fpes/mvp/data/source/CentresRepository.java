@@ -17,8 +17,8 @@ public class CentresRepository implements CentresDataSource {
     private CentresDataSource mCentresLocalDataSource = null;
     private CentresDataSource mCentresRemoteDataSource = null;
 
-
-    public CentresRepository(CentresDataSource mCentresLocalDataSource, CentresDataSource mCentresRemoteDataSource) {
+    public CentresRepository(CentresDataSource mCentresLocalDataSource,
+                             CentresDataSource mCentresRemoteDataSource) {
         if (mCentresLocalDataSource != null) {
             this.mCentresLocalDataSource = mCentresLocalDataSource;
         }
@@ -68,6 +68,4 @@ public class CentresRepository implements CentresDataSource {
             }
         });
     }
-
-
 }

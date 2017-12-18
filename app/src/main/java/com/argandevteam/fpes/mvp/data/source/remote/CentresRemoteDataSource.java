@@ -23,13 +23,11 @@ public class CentresRemoteDataSource implements CentresDataSource {
     private DatabaseReference mCentreReference;
     private DatabaseReference mCentreReviewsReference;
 
-
     public CentresRemoteDataSource() {
         instance = FirebaseDatabase.getInstance();
         mDatabase = instance.getReference();
         mCentresReference = mDatabase.child("centres");
     }
-
 
     @Override
     public void getCentres(final LoadCentresCallback callback) {
@@ -54,7 +52,7 @@ public class CentresRemoteDataSource implements CentresDataSource {
     @Override
     public void getCentre(int centreId, LoadCentreCallback callback) {
         mCentreReference = mDatabase.child(String.valueOf(centreId - 1));
-        mCentreReviewsReference = mDatabase.child("centres-reviews").child(String.valueOf(centreId - 1));
-
+        mCentreReviewsReference =
+                mDatabase.child("centres-reviews").child(String.valueOf(centreId - 1));
     }
 }

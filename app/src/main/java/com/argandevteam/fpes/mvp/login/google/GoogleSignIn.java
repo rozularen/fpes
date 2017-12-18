@@ -18,20 +18,17 @@ import com.google.firebase.auth.GoogleAuthProvider;
  * Created by markc on 17/12/2017.
  */
 
-public class GoogleSignIn implements GoogleSignInPresenter, GoogleApiClient.OnConnectionFailedListener {
+public class GoogleSignIn
+        implements GoogleSignInPresenter, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_SIGN_IN_G = 100;
 
     private static final String TAG = "GSIPresenter";
-
+    private final String googleIdToken =
+            "64500376949-1erlve8i66osmdfq6l6kc3p4e7igivhg.apps.googleusercontent.com";
     private MainActivity activity;
-
     private LoginPresenter loginPresenter;
-
     private GoogleApiClient googleApiClient;
-
-    private final String googleIdToken = "64500376949-1erlve8i66osmdfq6l6kc3p4e7igivhg.apps.googleusercontent.com";
-
     private AuthCredential googleCredential;
 
     public GoogleSignIn(MainActivity activity, LoginPresenter loginPresenter) {
@@ -41,16 +38,15 @@ public class GoogleSignIn implements GoogleSignInPresenter, GoogleApiClient.OnCo
 
     @Override
     public void createGoogleClient() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(googleIdToken)
-                .build();
+        GoogleSignInOptions gso =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+                        .requestIdToken(googleIdToken)
+                        .build();
 
-        googleApiClient = new GoogleApiClient.Builder(activity)
-                .enableAutoManage(activity /* FragmentActivity */,
-                        this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        googleApiClient =
+                new GoogleApiClient.Builder(activity).enableAutoManage(activity /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                        .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                        .build();
     }
 
     @Override
@@ -100,7 +96,9 @@ public class GoogleSignIn implements GoogleSignInPresenter, GoogleApiClient.OnCo
 
     //GoogleApiClient.OnConnectionFailedListener
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(
+            @NonNull
+                    ConnectionResult connectionResult) {
 
     }
 }

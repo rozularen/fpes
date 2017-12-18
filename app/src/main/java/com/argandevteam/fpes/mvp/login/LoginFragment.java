@@ -1,6 +1,5 @@
 package com.argandevteam.fpes.mvp.login;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,8 +23,8 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends BaseFragment implements LoginContract.View, View.OnClickListener {
-
+public class LoginFragment extends BaseFragment
+        implements LoginContract.View, View.OnClickListener {
 
     @BindView(R.id.email_input_layout)
     TextInputLayout emailInputLayout;
@@ -65,6 +64,7 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         ButterKnife.bind(this, view);
@@ -72,10 +72,10 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
         fbLogin.setOnClickListener(this);
         googleLoginButton.setOnClickListener(this);
         loginButton.setOnClickListener(this);
+        signupLink.setOnClickListener(this);
 
         return view;
     }
-
 
     @Override
     public void setPresenter(LoginContract.Presenter presenter) {
@@ -122,6 +122,9 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
             case R.id.fb_login_button:
                 presenter.doLoginWithFacebook();
                 break;
+            case R.id.link_signup:
+                navigateToRegister();
+                break;
             default:
                 break;
         }
@@ -131,6 +134,11 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         presenter.onResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void navigateToRegister() {
+        mainActivity.navigateToRegister();
     }
 
     @Override
@@ -146,7 +154,6 @@ public class LoginFragment extends BaseFragment implements LoginContract.View, V
     @Override
     public void setPasswordError() {
         passwordInputLayout.setError("Password is null");
-
     }
 
     @Override

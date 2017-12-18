@@ -30,71 +30,76 @@ import com.argandevteam.fpes.mvp.login.LoginPresenter;
 import com.argandevteam.fpes.mvp.login.facebook.FacebookSignIn;
 import com.argandevteam.fpes.mvp.login.google.GoogleSignIn;
 import com.argandevteam.fpes.mvp.profile.ProfileFragment;
+import com.argandevteam.fpes.mvp.register.RegisterFragment;
+import com.argandevteam.fpes.mvp.register.RegisterPresenter;
 import com.argandevteam.fpes.ui.CustomLinearLayout;
 import com.google.android.gms.ads.MobileAds;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements ListFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
     private static final int GET_FROM_GALLERY = 1;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
+
+
     CustomLinearLayout customLinearLayout;
     TextView drawerHeaderName;
     ImageView drawerUserPhoto;
+
+    @BindView(R.id.my_toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+
     @BindView(R.id.navigation)
     NavigationView mDrawerList;
-    @BindView(R.id.my_toolbar)
-    Toolbar mToolbar;
+
     @BindView(R.id.container)
     FrameLayout frameLayout;
+
     ProfileFragment profileFragment;
     MapFragment mapFragment;
 
-    private MainActivity activity;
+    private RegisterPresenter registerPresenter;
+    private RegisterFragment registerFragment;
 
     private LoginPresenter loginPresenter;
     private LoginFragment loginFragment;
     private GoogleSignIn googleSignInPresenter;
 
     private FacebookSignIn facebookSignInPresenter;
+    private ListPresenter listPresenter;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.drawer_layout);
+        setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
 
         MobileAds.initialize(this, "ca-app-pub-5632055827237755~3780528429");
-        activity = this;
+
+        // Set up Toolbar
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.app_name);
 
         View header = mDrawerList.getHeaderView(0);
         customLinearLayout = (CustomLinearLayout) header.findViewById(R.id.custom_linear_layout);
         drawerHeaderName = (TextView) header.findViewById(R.id.drawer_header_name);
         drawerUserPhoto = (ImageView) header.findViewById(R.id.drawer_user_icon);
 
-        setSupportActionBar(mToolbar);
-        mToolbar.setTitle(R.string.app_name);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                mToolbar, R.string.drawer_open, R.string.drawer_closed);
+        ActionBarDrawerToggle actionBarDrawerToggle =
+                new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open,
+                        R.string.drawer_closed);
         // Set the list's click listener
         mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-
-        mDrawerList.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                selectDrawerItem(item);
-                return true;
-            }
-        });
-
-        //Init GoogleSignInsPresenter and in the future also FacebookSignIn
 
         // Start
         loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentById(R.id.container);
@@ -102,8 +107,7 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
         if (loginFragment == null) {
             loginFragment = LoginFragment.newInstance();
 
-            getSupportFragmentManager()
-                    .beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, loginFragment, loginFragment.getTag())
                     .commit();
         }
@@ -118,6 +122,14 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
         loginPresenter.setGoogleSignInPresenter(googleSignInPresenter);
         loginPresenter.setFacebookSignInPresenter(facebookSignInPresenter);
         // Done
+        mDrawerList.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        selectDrawerItem(item);
+                        return true;
+                    }
+                });
     }
 
     private void selectDrawerItem(MenuItem menuItem) {
@@ -126,20 +138,22 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
 
         if (menuItem.getItemId() == R.id.nav_log_out) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-            dialog.setTitle("Cerrar sesion").setPositiveButton("Salir", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    navigateToLogin();
-                    loginPresenter.logOff();
-                    googleSignInPresenter.logOff();
-                }
-            }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
-
+            dialog.setTitle("Cerrar sesion")
+                    .setPositiveButton("Salir", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            navigateToLogin();
+                            loginPresenter.logOff();
+                            googleSignInPresenter.logOff();
+                        }
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
         } else if (menuItem.getItemId() == R.id.nav_map) {
             fragmentClass = MapFragment.class;
             if (mapFragment != null) {
@@ -158,7 +172,9 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
             if (fragmentClass != null) {
                 fragment = (Fragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.getTag()).commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment, fragment.getTag())
+                        .commit();
                 setTitle(menuItem.getTitle());
             }
         } catch (Exception e) {
@@ -168,7 +184,9 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.d(TAG, "onRequestPermissionsResult: ACTIVITY OK");
         new MapFragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -188,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
         Log.d(TAG, "onListFragmentInteraction: asdasdasd");
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GET_FROM_GALLERY && resultCode == -1) {
@@ -201,27 +218,35 @@ public class MainActivity extends AppCompatActivity implements ListFragment.OnLi
     public void navigateToHome() {
         ListFragment listFragment = ListFragment.newInstance();
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, listFragment)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, listFragment).commit();
 
-        ListPresenter listPresenter = new ListPresenter(listFragment);
+        listPresenter = new ListPresenter(listFragment);
     }
 
     public void navigateToLogin() {
         LoginFragment loginFragment = LoginFragment.newInstance();
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, loginFragment)
-                .commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, loginFragment).commit();
 
         loginPresenter = new LoginPresenter(loginFragment);
 
+        //This smells bad
         loginPresenter.setGoogleSignInPresenter(googleSignInPresenter);
         loginPresenter.setFacebookSignInPresenter(facebookSignInPresenter);
+
+        //remove Drawer toggle
+        //        mDrawerLayout.removeDrawerListener(actionBarDrawerToggle);
+        //        actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
     }
 
+    public void navigateToRegister() {
+        registerFragment = RegisterFragment.newInstance();
 
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, registerFragment)
+                .addToBackStack(null)
+                .commit();
+
+        registerPresenter = new RegisterPresenter(registerFragment);
+    }
 }

@@ -65,11 +65,11 @@ public class ReviewsAdapter extends BaseAdapter implements View.OnClickListener 
             if (review.user != null) {
                 user = review.user;
                 holder.reviewUserName.setText(user.name);
-                Picasso.with(context).load(review.user.user_image)
+                Picasso.with(context)
+                        .load(review.user.user_image)
                         .fit()
                         .transform(new CircleTransform())
                         .into(holder.reviewUserIcon);
-
             }
 
             holder.reviewText.setText(review.text);
@@ -109,7 +109,6 @@ public class ReviewsAdapter extends BaseAdapter implements View.OnClickListener 
         TextView reviewDate;
         @BindView(R.id.review_like_btn)
         ImageButton reviewLikeButton;
-
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

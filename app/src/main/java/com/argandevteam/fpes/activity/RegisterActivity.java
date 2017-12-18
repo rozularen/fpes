@@ -54,7 +54,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @BindView(R.id.signup_button)
     Button signUpButton;
 
-
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
@@ -80,11 +79,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mAuthListener = new FirebaseAuth.AuthStateListener() {
 
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(
+                    @NonNull
+                            FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Toast.makeText(RegisterActivity.this, "User: " + user.getEmail() + " is logged in.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "User: " + user.getEmail() + " is logged in.",
+                            Toast.LENGTH_SHORT).show();
 
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
@@ -101,44 +103,50 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(
+                            @NonNull
+                                    Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                         if (!task.isSuccessful()) {
                             Log.d("Gasdasda", task.getException().getMessage());
 
-                            Toast.makeText(RegisterActivity.this, "fallo",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "fallo", Toast.LENGTH_SHORT).show();
                         } else {
                             String description = "";
-                            final User newUser = new User(task.getResult().getUser().getUid(),
-                                    emailText.getText().toString(),
-                                    nameText.getText().toString(),
-                                    "https://firebasestorage.googleapis.com/v0/b/fpes-156817.appspot.com/o/default-user.png?alt=media&token=0db5e75d-cf2c-4112-9a95-fa7655e3b890",
-                                    description,
-                                    new HashMap<String, Boolean>());
+                            final User newUser =
+                                    new User(task.getResult().getUser().getUid(), emailText.getText().toString(),
+                                            nameText.getText().toString(),
+                                            "https://firebasestorage.googleapis.com/v0/b/fpes-156817.appspot.com/o/default-user.png?alt=media&token=0db5e75d-cf2c-4112-9a95-fa7655e3b890",
+                                            description, new HashMap<String, Boolean>());
 
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(userName)
-                                    .build();
+                            UserProfileChangeRequest profileUpdates =
+                                    new UserProfileChangeRequest.Builder().setDisplayName(userName).build();
 
-                            task.getResult().getUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    mDatabase.push().setValue(newUser, new DatabaseReference.CompletionListener() {
+                            task.getResult()
+                                    .getUser()
+                                    .updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                            if (databaseError != null) {
-                                                System.out.println("Data could not be saved " + databaseError.getMessage());
-
-                                            } else {
-                                                System.out.println("Data saved successfully.");
-                                                Intent signUpIntent = new Intent(activity, MainActivity.class);
-                                                startActivity(signUpIntent);
-                                            }
+                                        public void onComplete(
+                                                @NonNull
+                                                        Task<Void> task) {
+                                            mDatabase.push()
+                                                    .setValue(newUser, new DatabaseReference.CompletionListener() {
+                                                        @Override
+                                                        public void onComplete(DatabaseError databaseError,
+                                                                               DatabaseReference databaseReference) {
+                                                            if (databaseError != null) {
+                                                                System.out.println(
+                                                                        "Data could not be saved " + databaseError.getMessage());
+                                                            } else {
+                                                                System.out.println("Data saved successfully.");
+                                                                Intent signUpIntent = new Intent(activity, MainActivity.class);
+                                                                startActivity(signUpIntent);
+                                                            }
+                                                        }
+                                                    });
                                         }
                                     });
-                                }
-                            });
                         }
                     }
                 });
@@ -185,11 +193,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (TextUtils.isEmpty(email)) {
             errorMessage = "Introduzca email";
             isValidInput = false;
-
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             errorMessage = "Email no valido";
             isValidInput = false;
-
         }
         toggleTextInputLayoutError(emailLayout, errorMessage);
 
@@ -211,8 +217,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      *
      * @param msg the message, or null to hide
      */
-    private void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
-                                            String msg) {
+    private void toggleTextInputLayoutError(
+            @NonNull
+                    TextInputLayout textInputLayout, String msg) {
         textInputLayout.setError(msg);
         if (msg == null) {
             textInputLayout.setErrorEnabled(false);
@@ -224,8 +231,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void clearFocus() {
         View view = this.getCurrentFocus();
         if (view != null && view instanceof EditText) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context
-                    .INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             view.clearFocus();
         }

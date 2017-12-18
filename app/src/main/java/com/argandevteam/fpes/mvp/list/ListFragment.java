@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -82,9 +81,7 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -140,8 +137,7 @@ public class ListFragment extends BaseFragment implements ListContract.View {
                 detailsFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager
-                        .beginTransaction()
+                fragmentManager.beginTransaction()
                         .replace(R.id.container, detailsFragment, detailsFragment.getTag())
                         .addToBackStack(null)
                         .commit();
@@ -153,15 +149,14 @@ public class ListFragment extends BaseFragment implements ListContract.View {
         return view;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+            throw new RuntimeException(
+                    context.toString() + " must implement OnListFragmentInteractionListener");
         }
     }
 
@@ -180,8 +175,7 @@ public class ListFragment extends BaseFragment implements ListContract.View {
             final RadioButton cbPrivate = (RadioButton) filterView.findViewById(R.id.cb_private);
             final RadioButton cbPublic = (RadioButton) filterView.findViewById(R.id.cb_public);
 
-            filterDialog = new AlertDialog.Builder(getContext())
-                    .setTitle("Filtrar")
+            filterDialog = new AlertDialog.Builder(getContext()).setTitle("Filtrar")
                     .setView(filterView)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -190,21 +184,23 @@ public class ListFragment extends BaseFragment implements ListContract.View {
                             Log.d(TAG, "onClick: ");
                             if (cbPrivate.isChecked()) {
                                 Log.d(TAG, "onClick: cbPrivate is checked");
-                                centresRef.orderByChild("nature").equalTo("Centro Privado").addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot data) {
-                                        for (DataSnapshot dataSnapshot : data.getChildren()) {
-                                            Centre centre = dataSnapshot.getValue(Centre.class);
-                                            myList.add(centre);
-                                            mAdapter.notifyDataSetChanged();
-                                        }
-                                    }
+                                centresRef.orderByChild("nature")
+                                        .equalTo("Centro Privado")
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot data) {
+                                                for (DataSnapshot dataSnapshot : data.getChildren()) {
+                                                    Centre centre = dataSnapshot.getValue(Centre.class);
+                                                    myList.add(centre);
+                                                    mAdapter.notifyDataSetChanged();
+                                                }
+                                            }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Log.d(TAG, "onCancelled: ");
-                                    }
-                                });
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Log.d(TAG, "onCancelled: ");
+                                            }
+                                        });
                             }
                         }
                     })
@@ -244,7 +240,6 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     public void showLoadingCentresError() {
         Toast.makeText(getContext(), "Can't get Centres!", Toast.LENGTH_SHORT).show();
     }
-
 
     /**
      * This interface must be implemented by activities that contain this

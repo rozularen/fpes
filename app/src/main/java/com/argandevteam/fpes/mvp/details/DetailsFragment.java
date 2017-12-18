@@ -1,6 +1,5 @@
 package com.argandevteam.fpes.mvp.details;
 
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -66,7 +65,6 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     ArrayList<Review> reviewsList;
     @BindView(R.id.reviewList)
     ListView lvReview;
-
 
     MapView mapView;
     RatingBar centreRating;
@@ -172,13 +170,13 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         });
     }
 
-
     private void setUpListView(LayoutInflater inflater, Bundle savedInstanceState) {
         btnSend = (Button) listViewHeader.findViewById(R.id.btnSend);
         userRating = (RatingBar) listViewHeader.findViewById(R.id.user_rating);
         centreRating = (RatingBar) listViewHeader.findViewById(R.id.centre_rating);
         centreImage = (ImageView) listViewHeader.findViewById(R.id.centre_image);
-        reviewInputLayout = (TextInputLayout) listViewHeader.findViewById(R.id.user_review_input_layout);
+        reviewInputLayout =
+                (TextInputLayout) listViewHeader.findViewById(R.id.user_review_input_layout);
         reviewEditText = (TextInputEditText) listViewHeader.findViewById(R.id.user_review);
         numReviews = (TextView) listViewHeader.findViewById(R.id.centre_num_reviews);
         centreSpecificDen = (TextView) listViewHeader.findViewById(R.id.centre_specific_den);
@@ -186,7 +184,8 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         centreAddress = (TextView) listViewHeader.findViewById(R.id.centre_address);
         centreNature = (TextView) listViewHeader.findViewById(R.id.centre_nature);
 
-        Picasso.with(getContext()).load(centre.thumbnail_url)
+        Picasso.with(getContext())
+                .load(centre.thumbnail_url)
                 .fit()
                 .placeholder(R.drawable.com_facebook_button_background)
                 .centerCrop()
@@ -228,8 +227,7 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         LatLng centreLatLng = new LatLng(centre.lat, centre.lon);
         CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(centreLatLng, 8.5f);
         googleMap.animateCamera(yourLocation);
-        Marker marker = googleMap.addMarker(new MarkerOptions()
-                .position(centreLatLng)
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(centreLatLng)
                 .snippet("Dirección: " + centre.address)
                 .title(centre.specific_den));
         marker.setTag(centre);
@@ -249,7 +247,6 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         String errorMessage = null;
         if (TextUtils.isEmpty(reviewText)) {
             errorMessage = "Introduzca una breve opinión";
-
         }
         if (reviewText.length() < 6) {
             errorMessage = "Opinion demasiado corta";
@@ -272,23 +269,23 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
         Toast.makeText(getActivity(), "Tu opinión ha sido registrada.", Toast.LENGTH_SHORT).show();
     }
 
-    private void toggleTextInputLayoutError(@NonNull TextInputLayout textInputLayout,
-                                            String msg) {
+    private void toggleTextInputLayoutError(
+            @NonNull
+                    TextInputLayout textInputLayout, String msg) {
         textInputLayout.setError(msg);
         if (msg == null) {
             textInputLayout.setErrorEnabled(false);
         } else {
             textInputLayout.setErrorEnabled(true);
             reviewEditText.setBackgroundColor(Color.WHITE);
-
         }
     }
 
     private void clearFocus() {
         View view = getActivity().getCurrentFocus();
         if (view != null && view instanceof EditText) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context
-                    .INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             view.clearFocus();
         }

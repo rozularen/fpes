@@ -1,6 +1,5 @@
 package com.argandevteam.fpes.mvp.profile;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -35,7 +34,6 @@ import jp.wasabeef.picasso.transformations.BlurTransformation;
  */
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
-
     private static final int GET_FROM_GALLERY = 1;
     private static final String TAG = "ProfileFragment";
 
@@ -60,7 +58,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,7 +81,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 .transform(new BlurTransformation(getContext()))
                 .into(customLinearLayout);
 
-
         profileUserName.setText(firebaseUser.getDisplayName());
 
         return view;
@@ -95,8 +91,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.user_photo_container:
                 //   Intent selectImageIntent = new Intent(
-//                        Intent.ACTION_PICK,
-//                        MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                //                        Intent.ACTION_PICK,
+                //                        MediaStore.Images.Media.INTERNAL_CONTENT_URI);
 
                 // startActivityForResult(selectImageIntent, GET_FROM_GALLERY);
 
@@ -122,9 +118,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             profileDescription.setVisibility(View.VISIBLE);
             descriptionInput.setVisibility(View.GONE);
             isSaving = false;
-
         }
-
     }
 
     @Override
@@ -139,22 +133,24 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setNewUserImage(final Uri imageUri) {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setPhotoUri(imageUri)
-                .build();
+        UserProfileChangeRequest profileUpdates =
+                new UserProfileChangeRequest.Builder().setPhotoUri(imageUri).build();
         Log.d(TAG, "setNewUserImage: " + imageUri.toString());
 
-        firebaseUser.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "onComplete: User Image updated succesfully");
-                    Picasso.with(getContext())
-                            .load(imageUri.toString())
-                            .transform(new CircleTransform())
-                            .into(profileUserImage);
-                }
-            }
-        });
+        firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(
+                            @NonNull
+                                    Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: User Image updated succesfully");
+                            Picasso.with(getContext())
+                                    .load(imageUri.toString())
+                                    .transform(new CircleTransform())
+                                    .into(profileUserImage);
+                        }
+                    }
+                });
     }
 }

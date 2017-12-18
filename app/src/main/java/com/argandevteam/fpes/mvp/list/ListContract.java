@@ -17,11 +17,9 @@ public interface ListContract {
         void showCentres(List<Centre> centreList);
 
         void showLoadingCentresError();
-
     }
 
     interface Presenter extends BasePresenter {
 
     }
-
 }

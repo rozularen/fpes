@@ -41,7 +41,8 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
     private DatabaseReference mDatabase;
     private DatabaseReference centresReviewsRef;
 
-    public CentresAdapter(Context context, List<Centre> items, OnListFragmentInteractionListener listener) {
+    public CentresAdapter(Context context, List<Centre> items,
+                          OnListFragmentInteractionListener listener) {
         this.context = context;
         mCentresList = items;
         mListener = listener;
@@ -51,8 +52,8 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.centre_card, parent, false);
+        View view =
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.centre_card, parent, false);
         ViewHolder viewHolder = new ViewHolder(view, listener);
         return viewHolder;
     }
@@ -64,10 +65,16 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
         holder.centreSpecificDen.setText(centre.specific_den);
         holder.centreAddress.setText(centre.address);
         holder.centreNature.setText(centre.nature);
-        holder.centreNumReviews.setText(centre.reviews != null ? String.valueOf(centre.reviews.size()) : "0");
+        holder.centreNumReviews.setText(
+                centre.reviews != null ? String.valueOf(centre.reviews.size()) : "0");
         holder.centreRating.setRating(centre.rating_average);
 
-        Picasso.with(context).load(centre.thumbnail_url).fit().placeholder(R.drawable.com_facebook_button_background).centerCrop().into(holder.centreImage);
+        Picasso.with(context)
+                .load(centre.thumbnail_url)
+                .fit()
+                .placeholder(R.drawable.com_facebook_button_background)
+                .centerCrop()
+                .into(holder.centreImage);
 
         // Notify the active callbacks interface (the activity, if the
         // fragment is attached to one) that an item has been selected.
@@ -84,35 +91,35 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
     }
 
     private void calculateCentreAverageRating(final ViewHolder viewHolder, final Centre centre) {
-//        List<String> reviewsKeys = new ArrayList<>();
-//        for(Map.Entry<String, Boolean> entry : centre.reviews.entrySet()){
-//            reviewsKeys.add(entry.getKey());
-//        }
-        centresReviewsRef.child(String.valueOf(centre.id - 1)).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot reviewSnapshot : dataSnapshot.getChildren()) {
-                    Review review = reviewSnapshot.getValue(Review.class);
-                    centre.sum_ratings += review.rating;
-                    centre.num_ratings++;
-                }
-                centre.rating_average = centre.sum_ratings / centre.num_ratings;
-                viewHolder.centreRating.setRating(centre.rating_average);
-                Log.d(TAG, "onDataChange: " + centre.rating_average);
-            }
+        //        List<String> reviewsKeys = new ArrayList<>();
+        //        for(Map.Entry<String, Boolean> entry : centre.reviews.entrySet()){
+        //            reviewsKeys.add(entry.getKey());
+        //        }
+        centresReviewsRef.child(String.valueOf(centre.id - 1))
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot reviewSnapshot : dataSnapshot.getChildren()) {
+                            Review review = reviewSnapshot.getValue(Review.class);
+                            centre.sum_ratings += review.rating;
+                            centre.num_ratings++;
+                        }
+                        centre.rating_average = centre.sum_ratings / centre.num_ratings;
+                        viewHolder.centreRating.setRating(centre.rating_average);
+                        Log.d(TAG, "onDataChange: " + centre.rating_average);
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
     }
 
     public void replaceData(List<Centre> centreList) {
         mCentresList = centreList;
         notifyDataSetChanged();
     }
-
 
     public interface ItemClickListener {
         public void onClick(View view, int position);
@@ -142,7 +149,6 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
         @BindView(R.id.centre_nature)
         TextView centreNature;
 
-
         ItemClickListener mListener;
 
         public ViewHolder(View itemView, ItemClickListener listener) {
@@ -151,20 +157,15 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
             itemView.setOnClickListener(this);
             mView = itemView;
             mListener = listener;
-
         }
 
-//        public void setOnItemClickListener(ItemClickListener mListener) {
-//            this.mListener = mListener;
-//        }
+        //        public void setOnItemClickListener(ItemClickListener mListener) {
+        //            this.mListener = mListener;
+        //        }
 
         @Override
         public void onClick(View v) {
             mListener.onClick(v, getAdapterPosition());
         }
-
-
     }
-
-
 }

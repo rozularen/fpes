@@ -1,6 +1,5 @@
 package com.argandevteam.fpes.fragment;
 
-
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,7 +52,8 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
+public class MapFragment extends Fragment
+        implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = "MapFragment";
     private static final int MY_PERMISSIONS_LOCATION = 1;
@@ -69,17 +69,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull
+                                                   String[] permissions,
+                                           @NonNull
+                                                   int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-//                    activateUserLocation();
+                    //                    activateUserLocation();
                 } else {
 
                     // permission denied, boo! Disable the
@@ -99,7 +102,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
         ButterKnife.bind(this, view);
 
-
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         try {
@@ -109,7 +111,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         }
         mapView.getMapAsync(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
 
         return view;
     }
@@ -128,8 +129,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     Log.d("lat-long", "" + lat + "......." + lon);
                     final LatLng user = new LatLng(lat, lon);
                     /*used marker for show the location */
-                    mDatabase.child("centres").child(String.valueOf(centre.id - 1)).child("lat").setValue(lat);
-                    mDatabase.child("centres").child(String.valueOf(centre.id - 1)).child("lon").setValue(lon);
+                    mDatabase.child("centres")
+                            .child(String.valueOf(centre.id - 1))
+                            .child("lat")
+                            .setValue(lat);
+                    mDatabase.child("centres")
+                            .child(String.valueOf(centre.id - 1))
+                            .child("lon")
+                            .setValue(lon);
                 }
             }
         } catch (IOException e) {
@@ -142,18 +149,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     public void onMapReady(final GoogleMap googleMap) {
         map = googleMap;
 
-
         myList = new ArrayList<Centre>();
         final ArrayList<Double[]> coordArr = new ArrayList<>();
         map.setOnInfoWindowClickListener(this);
 
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -164,18 +170,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
         }
         try {
             map.setMyLocationEnabled(true);
-            int isLocationEnabled = Settings.Secure.getInt(getContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
+            int isLocationEnabled =
+                    Settings.Secure.getInt(getContext().getContentResolver(), Settings.Secure.LOCATION_MODE);
             if (isLocationEnabled == 0) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-                dialogBuilder
-                        .setTitle("Activar Localizacion GPS")
-                        .setMessage("Debe activar la localización GPS para que la aplicación funcione correctamente")
+                dialogBuilder.setTitle("Activar Localizacion GPS")
+                        .setMessage(
+                                "Debe activar la localización GPS para que la aplicación funcione correctamente")
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
                                 ListFragment fragment = new ListFragment();
-                                supportFragmentManager.beginTransaction().replace(R.id.container, fragment, fragment.getTag()).commit();
+                                supportFragmentManager.beginTransaction()
+                                        .replace(R.id.container, fragment, fragment.getTag())
+                                        .commit();
                             }
                         })
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
@@ -198,17 +207,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                     Centre centre = centreSnapshot.getValue(Centre.class);
                     myList.add(centre);
                     Log.d(TAG, "onDataChange: " + centreSnapshot.getValue());
-                    Marker marker = map.addMarker(new MarkerOptions()
-                            .position(new LatLng(centre.lat, centre.lon))
-                            .snippet("Dirección: " + centre.address)
-                            .title(centre.specific_den));
+                    Marker marker = map.addMarker(
+                            new MarkerOptions().position(new LatLng(centre.lat, centre.lon))
+                                    .snippet("Dirección: " + centre.address)
+                                    .title(centre.specific_den));
                     marker.setTag(centre);
-
                 }
                 LatLng coordinate = new LatLng(40.4212748, -3.7523294);
                 CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 8.5f);
                 map.animateCamera(yourLocation);
-//                coordArr.add(stringToCoord(myList));
+                //                coordArr.add(stringToCoord(myList));
 
             }
 

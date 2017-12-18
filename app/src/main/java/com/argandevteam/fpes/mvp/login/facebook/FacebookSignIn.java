@@ -64,7 +64,8 @@ public class FacebookSignIn implements FacebookSignInPresenter {
         @Override
         public void onSuccess(LoginResult loginResult) {
             Log.d(TAG, "onSuccess: AAAAAAAAAAAAAAAAAAAAAAA");
-            facebookCredential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+            facebookCredential =
+                    FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
             loginPresenter.signInWithCredentials(facebookCredential);
         }
 
