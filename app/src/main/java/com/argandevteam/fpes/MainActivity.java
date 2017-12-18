@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,15 +18,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.argandevteam.fpes.map.MapFragment;
-import com.argandevteam.fpes.data.Centre;
 import com.argandevteam.fpes.centres.ListFragment;
 import com.argandevteam.fpes.centres.ListPresenter;
+import com.argandevteam.fpes.data.Centre;
 import com.argandevteam.fpes.login.LoginFragment;
 import com.argandevteam.fpes.login.LoginPresenter;
 import com.argandevteam.fpes.login.facebook.FacebookSignIn;
 import com.argandevteam.fpes.login.google.GoogleSignIn;
+import com.argandevteam.fpes.map.MapFragment;
+import com.argandevteam.fpes.map.MapPresenter;
 import com.argandevteam.fpes.profile.ProfileFragment;
+import com.argandevteam.fpes.profile.ProfilePresenter;
 import com.argandevteam.fpes.register.RegisterFragment;
 import com.argandevteam.fpes.register.RegisterPresenter;
 import com.argandevteam.fpes.ui.CustomLinearLayout;
@@ -41,38 +41,43 @@ public class MainActivity extends AppCompatActivity
         implements ListFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
-    private static final int GET_FROM_GALLERY = 1;
 
+    private static final int GET_FROM_GALLERY = 1;
 
     CustomLinearLayout customLinearLayout;
     TextView drawerHeaderName;
     ImageView drawerUserPhoto;
 
-    @BindView(R.id.my_toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
+    DrawerLayout drawerLayout;
 
     @BindView(R.id.navigation)
-    NavigationView mDrawerList;
+    NavigationView drawerList;
 
     @BindView(R.id.container)
     FrameLayout frameLayout;
 
-    ProfileFragment profileFragment;
-    MapFragment mapFragment;
-
-    private RegisterPresenter registerPresenter;
-    private RegisterFragment registerFragment;
-
-    private LoginPresenter loginPresenter;
-    private LoginFragment loginFragment;
-    private GoogleSignIn googleSignInPresenter;
-
-    private FacebookSignIn facebookSignInPresenter;
-    private ListPresenter listPresenter;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+
+    private RegisterFragment registerFragment;
+    private RegisterPresenter registerPresenter;
+
+    private LoginFragment loginFragment;
+    private LoginPresenter loginPresenter;
+    private GoogleSignIn googleSignInPresenter;
+    private FacebookSignIn facebookSignInPresenter;
+
+    private ListFragment listFragment;
+    private ListPresenter listPresenter;
+
+    private ProfileFragment profileFragment;
+    private ProfilePresenter profilePresenter;
+
+    private MapFragment mapFragment;
+    private MapPresenter mapPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +93,19 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
 
-        View header = mDrawerList.getHeaderView(0);
+        View header = drawerList.getHeaderView(0);
         customLinearLayout = (CustomLinearLayout) header.findViewById(R.id.custom_linear_layout);
         drawerHeaderName = (TextView) header.findViewById(R.id.drawer_header_name);
         drawerUserPhoto = (ImageView) header.findViewById(R.id.drawer_user_icon);
 
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open,
+        actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.drawer_open,
                 R.string.drawer_closed);
-        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
-        mDrawerList.setNavigationItemSelectedListener(
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        drawerList.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -130,55 +139,39 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void selectDrawerItem(MenuItem menuItem) {
-        Fragment fragment = null;
-        Class fragmentClass = null;
-
         if (menuItem.getItemId() == R.id.nav_log_out) {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-            dialog.setTitle("Cerrar sesion")
-                    .setPositiveButton("Salir", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            navigateToLogin();
-                            loginPresenter.logOff();
-                            googleSignInPresenter.logOff();
-                        }
-                    })
-                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
+            showConfirmDialog();
         } else if (menuItem.getItemId() == R.id.nav_map) {
-            fragmentClass = MapFragment.class;
-            if (mapFragment != null) {
-                mapFragment = new MapFragment();
-            }
+            navigateToMap();
         } else if (menuItem.getItemId() == R.id.nav_profile) {
-            fragmentClass = ProfileFragment.class;
-            if (profileFragment != null) {
-                profileFragment = new ProfileFragment();
-            }
+            navigateToProfile();
         } else {
-            fragmentClass = ListFragment.class;
+            navigateToHome();
         }
 
-        try {
-            if (fragmentClass != null) {
-                fragment = (Fragment) fragmentClass.newInstance();
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.container, fragment, fragment.getTag())
-                        .commit();
-                setTitle(menuItem.getTitle());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
+
+    private void showConfirmDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Cerrar sesion")
+                .setPositiveButton("Salir", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        navigateToLogin();
+                        loginPresenter.logOff();
+                        googleSignInPresenter.logOff();
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -191,8 +184,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -206,19 +199,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == GET_FROM_GALLERY && resultCode == -1) {
-            profileFragment.onActivityResult(requestCode, resultCode, data);
+            profilePresenter.onResult(requestCode, resultCode, data);
         }
         loginPresenter.onResult(requestCode, resultCode, data);
     }
 
     private void setDrawerState(boolean isEnabled) {
         if (isEnabled) {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             actionBarDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
             actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
             actionBarDrawerToggle.syncState();
         } else {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             actionBarDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
             actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
             actionBarDrawerToggle.syncState();
@@ -227,7 +220,7 @@ public class MainActivity extends AppCompatActivity
 
     //Navigation methods
     public void navigateToHome() {
-        ListFragment listFragment = ListFragment.newInstance();
+        listFragment = ListFragment.newInstance();
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -236,7 +229,6 @@ public class MainActivity extends AppCompatActivity
 
         listPresenter = new ListPresenter(listFragment);
 
-        //Set up drawer menu
         setDrawerState(true);
     }
 
@@ -266,6 +258,35 @@ public class MainActivity extends AppCompatActivity
                 .commit();
 
         registerPresenter = new RegisterPresenter(registerFragment);
+
         setDrawerState(false);
     }
+
+    private void navigateToProfile() {
+        profileFragment = ProfileFragment.newInstance();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, profileFragment)
+                .addToBackStack(null)
+                .commit();
+
+        profilePresenter = new ProfilePresenter(profileFragment);
+
+        setDrawerState(true);
+    }
+
+    private void navigateToMap(){
+        mapFragment = MapFragment.newInstance();
+
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, mapFragment)
+                .addToBackStack(null)
+                .commit();
+
+        mapPresenter = new MapPresenter(mapFragment);
+
+        setDrawerState(true);
+    }
+
 }

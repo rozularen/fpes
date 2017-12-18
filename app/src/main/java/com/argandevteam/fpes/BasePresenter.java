@@ -5,7 +5,9 @@ package com.argandevteam.fpes;
  */
 
 public interface BasePresenter {
+
     void start();
 
     void onDestroy();
+
 }

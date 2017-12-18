@@ -300,11 +300,11 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
 
     @Override
     public Context getViewContext() {
-        return null;
+        return getContext();
     }
 
     @Override
     public Activity getViewActivity() {
-        return null;
+        return getActivity();
     }
 }

@@ -260,4 +260,8 @@ public class MapFragment extends BaseFragment
     public Activity getViewActivity() {
         return getActivity();
     }
+
+    public static MapFragment newInstance() {
+        return new MapFragment();
+    }
 }

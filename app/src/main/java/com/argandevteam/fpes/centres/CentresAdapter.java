@@ -60,6 +60,7 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Centre centre = mCentresList.get(position);
+
         calculateCentreAverageRating(holder, centre);
         holder.centreSpecificDen.setText(centre.specific_den);
         holder.centreAddress.setText(centre.address);

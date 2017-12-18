@@ -6,13 +6,23 @@ package com.argandevteam.fpes.map;
  */
 
 public class MapPresenter implements MapContract.Presenter {
+
+    private MapContract.View view;
+
+    public MapPresenter(MapContract.View view) {
+        if (view != null) {
+            this.view = view;
+            this.view.setPresenter(this);
+        }
+    }
+
     @Override
     public void start() {
-
+        //load Map maybe
     }
 
     @Override
     public void onDestroy() {
-
+        view = null;
     }
 }
