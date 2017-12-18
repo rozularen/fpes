@@ -21,7 +21,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.centredetails.DetailsFragment;
+import com.argandevteam.fpes.centredetails.CentreDetailsFragment;
 import com.argandevteam.fpes.BaseFragment;
 import com.argandevteam.fpes.data.Centre;
 import com.google.android.gms.ads.AdRequest;
@@ -129,15 +129,15 @@ public class ListFragment extends BaseFragment implements ListContract.View {
             @Override
             public void onClick(View view, int position) {
 
-                DetailsFragment detailsFragment = new DetailsFragment();
+                CentreDetailsFragment centreDetailsFragment = new CentreDetailsFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("centre", myList.get(position));
 
-                detailsFragment.setArguments(bundle);
+                centreDetailsFragment.setArguments(bundle);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, detailsFragment, detailsFragment.getTag())
+                        .replace(R.id.container, centreDetailsFragment, centreDetailsFragment.getTag())
                         .addToBackStack(null)
                         .commit();
 

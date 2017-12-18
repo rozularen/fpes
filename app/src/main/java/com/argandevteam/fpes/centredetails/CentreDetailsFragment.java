@@ -1,5 +1,6 @@
 package com.argandevteam.fpes.centredetails;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.argandevteam.fpes.BaseFragment;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.data.Centre;
 import com.argandevteam.fpes.data.Review;
@@ -56,9 +58,9 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailsFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
+public class CentreDetailsFragment extends BaseFragment implements CentreDetailsContract.View, OnMapReadyCallback, View.OnClickListener {
 
-    private static final String TAG = "DetailsFragment";
+    private static final String TAG = "CentreDetailsFragment";
     Centre centre;
     ReviewsAdapter reviewsAdapter;
     ArrayList<Review> reviewsList;
@@ -87,8 +89,9 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
     private DatabaseReference userReviewsRef;
     private DatabaseReference userRef;
     private DatabaseReference reviewsRef;
+    private CentreDetailsContract.Presenter presenter;
 
-    public DetailsFragment() {
+    public CentreDetailsFragment() {
         // Required empty public constructor
     }
 
@@ -288,5 +291,20 @@ public class DetailsFragment extends Fragment implements OnMapReadyCallback, Vie
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             view.clearFocus();
         }
+    }
+
+    @Override
+    public void setPresenter(CentreDetailsContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public Context getViewContext() {
+        return null;
+    }
+
+    @Override
+    public Activity getViewActivity() {
+        return null;
     }
 }

@@ -1,6 +1,8 @@
 package com.argandevteam.fpes.map;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,7 +13,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,10 +23,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.argandevteam.fpes.BaseFragment;
 import com.argandevteam.fpes.R;
-import com.argandevteam.fpes.data.Centre;
-import com.argandevteam.fpes.centredetails.DetailsFragment;
+import com.argandevteam.fpes.centredetails.CentreDetailsFragment;
 import com.argandevteam.fpes.centres.ListFragment;
+import com.argandevteam.fpes.data.Centre;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,8 +54,8 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment
-        implements OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
+public class MapFragment extends BaseFragment
+        implements MapContract.View, OnMapReadyCallback, LocationListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = "MapFragment";
     private static final int MY_PERMISSIONS_LOCATION = 1;
@@ -64,39 +66,18 @@ public class MapFragment extends Fragment
     private DatabaseReference mDatabase;
     private ArrayList<Centre> myList;
 
+    private MapContract.Presenter presenter;
+
     public MapFragment() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull
-                                                   String[] permissions,
-                                           @NonNull
-                                                   int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case MY_PERMISSIONS_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    //                    activateUserLocation();
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
@@ -153,13 +134,14 @@ public class MapFragment extends Fragment
         final ArrayList<Double[]> coordArr = new ArrayList<>();
         map.setOnInfoWindowClickListener(this);
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
+        int fineLocationPermission = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        if (fineLocationPermission != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -251,16 +233,31 @@ public class MapFragment extends Fragment
     public void onInfoWindowClick(Marker marker) {
         Centre centreMarker = (Centre) marker.getTag();
 
-        DetailsFragment detailsFragment = new DetailsFragment();
+        CentreDetailsFragment centreDetailsFragment = new CentreDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("centre", centreMarker);
 
-        detailsFragment.setArguments(bundle);
+        centreDetailsFragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, detailsFragment, detailsFragment.getTag());
+        fragmentTransaction.replace(R.id.container, centreDetailsFragment, centreDetailsFragment.getTag());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void setPresenter(MapContract.Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public Context getViewContext() {
+        return getContext();
+    }
+
+    @Override
+    public Activity getViewActivity() {
+        return getActivity();
     }
 }
