@@ -282,7 +282,6 @@ public class MainActivity extends AppCompatActivity
     private void navigateToMap() {
         mapFragment = MapFragment.newInstance();
 
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, mapFragment)
                 .addToBackStack(null)
