@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.argandevteam.fpes.BasePresenter;
 import com.argandevteam.fpes.BaseView;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Created by markc on 13/12/2017.
@@ -21,6 +22,9 @@ public class LoginContract {
         void setPasswordError();
 
         void setEmailError();
+
+        void loadUserInfo(FirebaseUser firebaseUser);
+
     }
 
     interface Presenter extends BasePresenter {

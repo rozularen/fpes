@@ -19,6 +19,7 @@ import com.argandevteam.fpes.BaseFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -159,5 +160,10 @@ public class LoginFragment extends BaseFragment
     @Override
     public void setEmailError() {
         emailInputLayout.setError("Email is null");
+    }
+
+    @Override
+    public void loadUserInfo(FirebaseUser firebaseUser) {
+        mainActivity.loadUserInfo(firebaseUser);
     }
 }

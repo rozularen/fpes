@@ -37,7 +37,7 @@ public class ListPresenter implements ListContract.Presenter {
     }
 
     @Override
-    public void onDestroy() {
+    public void stop() {
         mView = null;
     }
 

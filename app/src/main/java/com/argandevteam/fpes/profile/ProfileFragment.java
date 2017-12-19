@@ -68,10 +68,12 @@ public class ProfileFragment extends BaseFragment implements ProfileContract.Vie
     public void onResume() {
         super.onResume();
         presenter.setAuthListener();
+        presenter.start();
     }
 
     @Override
     public void onStop() {
+        presenter.stop();
         presenter.removeAuthListener();
         super.onStop();
     }

@@ -52,7 +52,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     }
 
     @Override
-    public void onDestroy() {
+    public void stop() {
         view = null;
     }
 

@@ -22,7 +22,7 @@ public class MapPresenter implements MapContract.Presenter {
     }
 
     @Override
-    public void onDestroy() {
+    public void stop() {
         view = null;
     }
 }

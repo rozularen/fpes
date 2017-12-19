@@ -8,6 +8,6 @@ public interface BasePresenter {
 
     void start();
 
-    void onDestroy();
+    void stop();
 
 }

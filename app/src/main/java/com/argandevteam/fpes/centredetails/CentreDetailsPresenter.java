@@ -21,7 +21,7 @@ public class CentreDetailsPresenter implements CentreDetailsContract.Presenter {
     }
 
     @Override
-    public void onDestroy() {
+    public void stop() {
         view = null;
     }
 }

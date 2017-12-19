@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.argandevteam.fpes.data.source.UsersRepository;
 import com.argandevteam.fpes.login.facebook.FacebookSignIn;
 import com.argandevteam.fpes.login.google.GoogleSignIn;
@@ -37,12 +36,11 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
         @Override
-        public void onAuthStateChanged(
-                @NonNull
-                        FirebaseAuth firebaseAuth) {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user != null) {
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            firebaseUser = firebaseAuth.getCurrentUser();
+            if (firebaseUser != null) {
                 //User is logged, notify MainActivity to change screen
+                view.loadUserInfo(firebaseUser);
                 view.navigateToHome();
                 Log.d(TAG, "onAuthStateChanged: USER LOGGED IN");
             } else {
@@ -51,6 +49,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             }
         }
     };
+    private FirebaseUser firebaseUser;
 
     public LoginPresenter(LoginContract.View view) {
         if (view != null) {
@@ -76,7 +75,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void onDestroy() {
+    public void stop() {
         view = null;
     }
 

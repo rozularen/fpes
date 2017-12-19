@@ -36,6 +36,7 @@ import com.google.android.gms.ads.MobileAds;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements ListFragment.OnListFragmentInteractionListener {
@@ -121,7 +122,8 @@ public class MainActivity extends AppCompatActivity
         if (loginFragment == null) {
             loginFragment = LoginFragment.newInstance();
 
-            getSupportFragmentManager().beginTransaction()
+            getSupportFragmentManager()
+                    .beginTransaction()
                     .replace(R.id.container, loginFragment, loginFragment.getTag())
                     .commit();
         }
@@ -218,7 +220,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //Navigation methods
+    /**
+     * Navigation methods
+     */
     public void navigateToHome() {
         listFragment = ListFragment.newInstance();
 
@@ -275,7 +279,7 @@ public class MainActivity extends AppCompatActivity
         setDrawerState(true);
     }
 
-    private void navigateToMap(){
+    private void navigateToMap() {
         mapFragment = MapFragment.newInstance();
 
 
@@ -289,4 +293,9 @@ public class MainActivity extends AppCompatActivity
         setDrawerState(true);
     }
 
+    public void loadUserInfo(FirebaseUser firebaseUser) {
+        String displayName = firebaseUser.getDisplayName();
+        drawerHeaderName.setText(displayName);
+
+    }
 }

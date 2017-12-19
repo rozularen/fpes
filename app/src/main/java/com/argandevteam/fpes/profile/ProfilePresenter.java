@@ -33,6 +33,8 @@ public class ProfilePresenter implements ProfileContract.Presenter {
                         FirebaseAuth firebaseAuth) {
             firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser != null) {
+                view.loadUserInfo(firebaseUser);
+
                 //User is logged, notify MainActivity to change screen
                 Log.d(TAG, "onAuthStateChanged: USER LOGGED IN");
             } else {
@@ -62,11 +64,10 @@ public class ProfilePresenter implements ProfileContract.Presenter {
 
     @Override
     public void start() {
-        view.loadUserInfo(firebaseUser);
     }
 
     @Override
-    public void onDestroy() {
+    public void stop() {
         view = null;
     }
 
