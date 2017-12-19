@@ -6,4 +6,6 @@
 /captures
 .externalNativeBuild
 app/libs/
+app/src/androidTest
+app/src/test
 /.gradle/
