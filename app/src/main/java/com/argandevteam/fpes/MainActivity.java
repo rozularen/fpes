@@ -18,8 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.argandevteam.fpes.centres.ListFragment;
-import com.argandevteam.fpes.centres.ListPresenter;
+import com.argandevteam.fpes.centres.CentresFragment;
+import com.argandevteam.fpes.centres.CentresPresenter;
 import com.argandevteam.fpes.data.Centre;
 import com.argandevteam.fpes.login.LoginFragment;
 import com.argandevteam.fpes.login.LoginPresenter;
@@ -39,7 +39,7 @@ import butterknife.ButterKnife;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
-        implements ListFragment.OnListFragmentInteractionListener {
+        implements CentresFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity
     private GoogleSignIn googleSignInPresenter;
     private FacebookSignIn facebookSignInPresenter;
 
-    private ListFragment listFragment;
-    private ListPresenter listPresenter;
+    private CentresFragment centresFragment;
+    private CentresPresenter centresPresenter;
 
     private ProfileFragment profileFragment;
     private ProfilePresenter profilePresenter;
@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity
 
         View header = drawerList.getHeaderView(0);
         customLinearLayout = (CustomLinearLayout) header.findViewById(R.id.custom_linear_layout);
-        drawerHeaderName = (TextView) header.findViewById(R.id.drawer_header_name);
-        drawerUserPhoto = (ImageView) header.findViewById(R.id.drawer_user_icon);
+        drawerHeaderName = (TextView) header.findViewById(R.id.text_drawer_username);
+        drawerUserPhoto = (ImageView) header.findViewById(R.id.image_drawer_user_image);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -224,14 +224,14 @@ public class MainActivity extends AppCompatActivity
      * Navigation methods
      */
     public void navigateToHome() {
-        listFragment = ListFragment.newInstance();
+        centresFragment = CentresFragment.newInstance();
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, listFragment)
+                .replace(R.id.container, centresFragment)
                 .commit();
 
-        listPresenter = new ListPresenter(listFragment);
+        centresPresenter = new CentresPresenter(centresFragment);
 
         setDrawerState(true);
     }

@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import com.argandevteam.fpes.BaseFragment;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.centredetails.CentreDetailsFragment;
-import com.argandevteam.fpes.centres.ListFragment;
+import com.argandevteam.fpes.centres.CentresFragment;
 import com.argandevteam.fpes.data.Centre;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -134,7 +134,7 @@ public class MapFragment extends BaseFragment
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-                                ListFragment fragment = new ListFragment();
+                                CentresFragment fragment = new CentresFragment();
                                 supportFragmentManager.beginTransaction()
                                         .replace(R.id.container, fragment, fragment.getTag())
                                         .commit();

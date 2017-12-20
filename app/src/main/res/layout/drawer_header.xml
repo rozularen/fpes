@@ -14,13 +14,13 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/drawer_user_icon"
+            android:id="@+id/image_drawer_user_image"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/drawer_header_name"
+            android:id="@+id/text_drawer_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"

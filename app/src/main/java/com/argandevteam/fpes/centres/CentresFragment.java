@@ -44,9 +44,9 @@ import butterknife.ButterKnife;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ListFragment extends BaseFragment implements ListContract.View {
+public class CentresFragment extends BaseFragment implements CentresContract.View {
 
-    private static final String TAG = "ListFragment";
+    private static final String TAG = "CentresFragment";
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
@@ -63,18 +63,18 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     private DatabaseReference centresReviewsRef;
     private DatabaseReference centresRef;
 
-    private ListContract.Presenter mPresenter;
+    private CentresContract.Presenter mPresenter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ListFragment() {
+    public CentresFragment() {
 
     }
 
-    public static ListFragment newInstance() {
-        return new ListFragment();
+    public static CentresFragment newInstance() {
+        return new CentresFragment();
     }
 
     @Override
@@ -216,7 +216,7 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     }
 
     @Override
-    public void setPresenter(ListContract.Presenter presenter) {
+    public void setPresenter(CentresContract.Presenter presenter) {
         mPresenter = presenter;
     }
 

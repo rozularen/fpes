@@ -10,18 +10,18 @@ import java.util.List;
  * Created by markc on 06/12/2017.
  */
 
-public class ListPresenter implements ListContract.Presenter {
+public class CentresPresenter implements CentresContract.Presenter {
 
-    private ListContract.View mView;
+    private CentresContract.View mView;
     private CentresRepository mCentresRepository;
 
-    public ListPresenter(ListContract.View view) {
+    public CentresPresenter(CentresContract.View view) {
         if (view != null) {
             mView = view;
         }
     }
 
-    public ListPresenter(ListContract.View view, CentresRepository centresRepository) {
+    public CentresPresenter(CentresContract.View view, CentresRepository centresRepository) {
         if (centresRepository != null) {
             mCentresRepository = centresRepository;
             if (view != null) {
