@@ -2,7 +2,6 @@ package com.argandevteam.fpes.centres;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,22 +129,22 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
         Centre centre;
         Target target;
 
-        @BindView(R.id.centre_image)
+        @BindView(R.id.image_centre)
         ImageView centreImage;
 
-        @BindView(R.id.centre_specific_den)
+        @BindView(R.id.text_specific_den)
         TextView centreSpecificDen;
 
-        @BindView(R.id.centre_address)
+        @BindView(R.id.text_address)
         TextView centreAddress;
 
-        @BindView(R.id.centre_rating)
+        @BindView(R.id.rb_average_rating)
         RatingBar centreRating;
 
-        @BindView(R.id.centre_num_reviews)
+        @BindView(R.id.text_num_reviews)
         TextView centreNumReviews;
 
-        @BindView(R.id.centre_nature)
+        @BindView(R.id.text_nature)
         TextView centreNature;
 
         ItemClickListener mListener;

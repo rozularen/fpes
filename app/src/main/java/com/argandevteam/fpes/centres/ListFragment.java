@@ -54,7 +54,7 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     @BindView(R.id.rv_centres)
     RecyclerView recyclerView;
 
-    @BindView(R.id.adView)
+    @BindView(R.id.ad_view)
     AdView mAdView;
     CentresAdapter mAdapter;
     private OnListFragmentInteractionListener mListener;

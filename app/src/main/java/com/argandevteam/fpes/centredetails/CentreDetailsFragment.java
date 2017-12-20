@@ -173,18 +173,18 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
     }
 
     private void setUpListView(LayoutInflater inflater, Bundle savedInstanceState) {
-        btnSend = (Button) listViewHeader.findViewById(R.id.btnSend);
-        userRating = (RatingBar) listViewHeader.findViewById(R.id.user_rating);
-        centreRating = (RatingBar) listViewHeader.findViewById(R.id.centre_rating);
-        centreImage = (ImageView) listViewHeader.findViewById(R.id.centre_image);
+        btnSend = (Button) listViewHeader.findViewById(R.id.btn_send_review);
+        userRating = (RatingBar) listViewHeader.findViewById(R.id.rb_user_rating);
+        centreRating = (RatingBar) listViewHeader.findViewById(R.id.rb_average_rating);
+        centreImage = (ImageView) listViewHeader.findViewById(R.id.image_centre);
         reviewInputLayout =
-                (TextInputLayout) listViewHeader.findViewById(R.id.user_review_input_layout);
-        reviewEditText = (TextInputEditText) listViewHeader.findViewById(R.id.user_review);
-        numReviews = (TextView) listViewHeader.findViewById(R.id.centre_num_reviews);
-        centreSpecificDen = (TextView) listViewHeader.findViewById(R.id.centre_specific_den);
-        centreRatingValue = (TextView) listViewHeader.findViewById(R.id.centre_rating_value);
-        centreAddress = (TextView) listViewHeader.findViewById(R.id.centre_address);
-        centreNature = (TextView) listViewHeader.findViewById(R.id.centre_nature);
+                (TextInputLayout) listViewHeader.findViewById(R.id.il_review);
+        reviewEditText = (TextInputEditText) listViewHeader.findViewById(R.id.et_user_review);
+        numReviews = (TextView) listViewHeader.findViewById(R.id.text_num_reviews);
+        centreSpecificDen = (TextView) listViewHeader.findViewById(R.id.text_specific_den);
+        centreRatingValue = (TextView) listViewHeader.findViewById(R.id.text_rating);
+        centreAddress = (TextView) listViewHeader.findViewById(R.id.text_address);
+        centreNature = (TextView) listViewHeader.findViewById(R.id.text_nature);
 
         Picasso.with(getContext())
                 .load(centre.thumbnail_url)
@@ -238,7 +238,7 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnSend:
+            case R.id.btn_send_review:
                 sendReview();
         }
     }
