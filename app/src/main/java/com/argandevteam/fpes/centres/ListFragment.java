@@ -20,9 +20,9 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.argandevteam.fpes.BaseFragment;
 import com.argandevteam.fpes.R;
 import com.argandevteam.fpes.centredetails.CentreDetailsFragment;
-import com.argandevteam.fpes.BaseFragment;
 import com.argandevteam.fpes.data.Centre;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -83,7 +83,7 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_centre_list, container, false);
 
@@ -97,10 +97,10 @@ public class ListFragment extends BaseFragment implements ListContract.View {
 
         centresRef = mDatabase.child("centres");
         centresReviewsRef = mDatabase.child("centres-reviews");
-
         mDatabase.child("centres").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                int counter = 0;
                 for (DataSnapshot centreSnapshot : dataSnapshot.getChildren()) {
                     Centre centre = centreSnapshot.getValue(Centre.class);
                     myList.add(centre);

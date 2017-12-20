@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -43,10 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,15 +58,19 @@ public class MapFragment extends BaseFragment
     @BindView(R.id.mapView)
     MapView mapView;
     LocationManager locationManager;
+    //    @BindView(R.id.btn_try)
+//    Button btnTry;
     private DatabaseReference mDatabase;
     private ArrayList<Centre> myList;
-
     private MapContract.Presenter presenter;
 
     public MapFragment() {
         // Required empty public constructor
     }
 
+    public static MapFragment newInstance() {
+        return new MapFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,43 +92,15 @@ public class MapFragment extends BaseFragment
         mapView.getMapAsync(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+
         return view;
     }
 
-    public Double[] stringToCoord(List<Centre> centres) {
-        Geocoder geoCoder = new Geocoder(getContext(), Locale.getDefault());
-        Double lat = null, lon = null;
-        try {
-            for (Centre centre : centres) {
-                String address = centre.address + ", " + centre.municipality;
-                List<Address> addresses = geoCoder.getFromLocationName(address, 5);
-                if (addresses.size() > 0) {
-                    lat = (double) (addresses.get(0).getLatitude());
-                    lon = (double) (addresses.get(0).getLongitude());
-
-                    Log.d("lat-long", "" + lat + "......." + lon);
-                    final LatLng user = new LatLng(lat, lon);
-                    /*used marker for show the location */
-                    mDatabase.child("centres")
-                            .child(String.valueOf(centre.id - 1))
-                            .child("lat")
-                            .setValue(lat);
-                    mDatabase.child("centres")
-                            .child(String.valueOf(centre.id - 1))
-                            .child("lon")
-                            .setValue(lon);
-                }
-            }
-        } catch (IOException e) {
-            Log.d(TAG, "stringToCoord: " + e.getMessage());
-        }
-        return new Double[]{lat, lon};
-    }
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         map = googleMap;
-
+        map.clear();
         myList = new ArrayList<Centre>();
         final ArrayList<Double[]> coordArr = new ArrayList<>();
         map.setOnInfoWindowClickListener(this);
@@ -194,11 +165,12 @@ public class MapFragment extends BaseFragment
                                     .snippet("Dirección: " + centre.address)
                                     .title(centre.specific_den));
                     marker.setTag(centre);
+
                 }
                 LatLng coordinate = new LatLng(40.4212748, -3.7523294);
                 CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 8.5f);
                 map.animateCamera(yourLocation);
-                //                coordArr.add(stringToCoord(myList));
+                Log.d(TAG, "onDataChange: HEEEEE");
 
             }
 
@@ -259,9 +231,5 @@ public class MapFragment extends BaseFragment
     @Override
     public Activity getViewActivity() {
         return getActivity();
-    }
-
-    public static MapFragment newInstance() {
-        return new MapFragment();
     }
 }

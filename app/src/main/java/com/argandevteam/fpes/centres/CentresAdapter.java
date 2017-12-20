@@ -106,7 +106,6 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
                         }
                         centre.rating_average = centre.sum_ratings / centre.num_ratings;
                         viewHolder.centreRating.setRating(centre.rating_average);
-                        Log.d(TAG, "onDataChange: " + centre.rating_average);
                     }
 
                     @Override

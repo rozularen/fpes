@@ -33,22 +33,22 @@ public class LoginFragment extends BaseFragment
     @BindView(R.id.password_input_layout)
     TextInputLayout passwordInputLayout;
 
-    @BindView(R.id.input_email)
+    @BindView(R.id.et_email)
     TextInputEditText emailText;
 
-    @BindView(R.id.input_password)
+    @BindView(R.id.et_password)
     TextInputEditText passwordText;
 
-    @BindView(R.id.login_button)
+    @BindView(R.id.btn_log_in)
     Button loginButton;
 
-    @BindView(R.id.google_login_button)
+    @BindView(R.id.btn_google_log_in)
     Button googleLoginButton;
 
-    @BindView(R.id.fb_login_button)
+    @BindView(R.id.btn_facebook_log_in)
     Button fbLogin;
 
-    @BindView(R.id.link_signup)
+    @BindView(R.id.text_register_link)
     TextView signupLink;
 
     private LoginContract.Presenter presenter;
@@ -111,19 +111,19 @@ public class LoginFragment extends BaseFragment
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.login_button:
+            case R.id.btn_log_in:
                 String email = emailText.getText().toString();
                 String password = passwordText.getText().toString();
 
                 presenter.doLoginWithEmailAndPassword(email, password);
                 break;
-            case R.id.google_login_button:
+            case R.id.btn_google_log_in:
                 presenter.doLoginWithGoogle();
                 break;
-            case R.id.fb_login_button:
+            case R.id.btn_facebook_log_in:
                 presenter.doLoginWithFacebook();
                 break;
-            case R.id.link_signup:
+            case R.id.text_register_link:
                 navigateToRegister();
                 break;
             default:

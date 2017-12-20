@@ -5,7 +5,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="com.argandevteam.fpes.map.MapFragment">
-
+    <!--<Button-->
+        <!--android:id="@+id/btn_try"-->
+        <!--android:text="prueba"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
