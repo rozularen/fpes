@@ -81,7 +81,7 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
     TextView centreAddress;
     TextView centreNature;
     TextView centreRatingValue;
-    @BindView(R.id.adView)
+    @BindView(R.id.ad_view)
     AdView mAdView;
     private DatabaseReference mDatabase;
     private DatabaseReference centreRef;

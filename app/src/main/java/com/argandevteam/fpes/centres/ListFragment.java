@@ -51,7 +51,7 @@ public class ListFragment extends BaseFragment implements ListContract.View {
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
-    @BindView(R.id.lvCentres)
+    @BindView(R.id.rv_centres)
     RecyclerView recyclerView;
 
     @BindView(R.id.adView)
