@@ -64,7 +64,7 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
     Centre centre;
     ReviewsAdapter reviewsAdapter;
     ArrayList<Review> reviewsList;
-    @BindView(R.id.reviewList)
+    @BindView(R.id.lv_reviews)
     ListView lvReview;
 
     MapView mapView;
@@ -106,7 +106,7 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.centre_list_reviews, container, false);
-        lvReview = (ListView) view.findViewById(R.id.reviewList);
+        lvReview = (ListView) view.findViewById(R.id.lv_reviews);
         ButterKnife.bind(this, view);
 
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -213,7 +213,7 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
     }
 
     private void initializeMaps(Bundle savedInstanceState, ViewGroup listViewHeader) {
-        mapView = (MapView) listViewHeader.findViewById(R.id.mapView);
+        mapView = (MapView) listViewHeader.findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         try {

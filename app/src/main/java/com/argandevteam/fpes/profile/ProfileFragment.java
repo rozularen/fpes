@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,22 +33,22 @@ public class ProfileFragment extends BaseFragment implements ProfileContract.Vie
 
     private static final String TAG = "ProfileFragment";
 
-    @BindView(R.id.user_photo_container)
+    @BindView(R.id.cll_background_image)
     CustomLinearLayout customLinearLayout;
 
-    @BindView(R.id.user_photo_view)
+    @BindView(R.id.image_user_image)
     ImageView profileUserImage;
 
-    @BindView(R.id.profile_user_name)
+    @BindView(R.id.text_username)
     TextView profileUserName;
 
-    @BindView(R.id.update_profile)
+    @BindView(R.id.text_update_profile)
     TextView updateProfile;
 
-    @BindView(R.id.profile_description)
+    @BindView(R.id.text_user_description)
     TextView profileDescription;
 
-    @BindView(R.id.description_input)
+    @BindView(R.id.et_user_description)
     EditText descriptionInput;
 
     private boolean isSaving;
@@ -108,12 +107,12 @@ public class ProfileFragment extends BaseFragment implements ProfileContract.Vie
                 .into(customLinearLayout);
     }
 
-    @OnClick(R.id.user_photo_container)
+    @OnClick(R.id.cll_background_image)
     public void onUserPhotoClick(View view) {
         Toast.makeText(getContext(), "GALERIA", Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick(R.id.update_profile)
+    @OnClick(R.id.text_update_profile)
     public void onUpdateProfileClick(View view) {
         updateProfileDescription();
         Toast.makeText(getActivity(), "actualizar", Toast.LENGTH_SHORT).show();

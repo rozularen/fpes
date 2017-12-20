@@ -10,7 +10,7 @@
 
 
     <ImageView
-        android:id="@+id/review_user_icon"
+        android:id="@+id/image_user_image"
         android:layout_width="78dp"
         android:layout_height="78dp"
         android:paddingLeft="10dp"
@@ -33,7 +33,7 @@
 
 
             <TextView
-                android:id="@+id/review_user_name"
+                android:id="@+id/text_review_username"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -41,14 +41,14 @@
                 android:textColor="#424242" />
 
             <TextView
-                android:id="@+id/review_likes"
+                android:id="@+id/text_review_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center"
                 android:text="+1" />
 
             <ImageButton
-                android:id="@+id/review_like_btn"
+                android:id="@+id/btn_review_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00000000"
@@ -57,7 +57,7 @@
                 android:src="@drawable/ic_thumb_up_black" />
 
             <ImageButton
-                android:id="@+id/review_options_btn"
+                android:id="@+id/i_btn_review_options"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00000000"
@@ -69,14 +69,14 @@
             android:layout_height="wrap_content">
 
             <RatingBar
-                android:id="@+id/review_rating"
+                android:id="@+id/rb_user_rating"
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5" />
 
             <TextView
-                android:id="@+id/review_date"
+                android:id="@+id/text_review_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -86,7 +86,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/review_text"
+            android:id="@+id/text_review_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"

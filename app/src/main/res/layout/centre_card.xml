@@ -16,17 +16,17 @@
             android:id="@+id/text_specific_den"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:text="Centro ProfesSSDional  sadsdas U-Tad"
+            android:text="Centro Profesional U-Tad"
             android:textColor="@color/textColor"
             android:textSize="28sp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="16dp"
             android:background="#d5d5d5" />
 
         <ImageView
@@ -67,6 +67,7 @@
                 android:id="@+id/text_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_directions_black"
                 android:drawablePadding="5dp"
                 android:drawableStart="@drawable/ic_directions_black"
                 android:gravity="center"
@@ -84,6 +85,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
+                    android:drawableLeft="@drawable/ic_type_black"
                     android:drawablePadding="5dp"
                     android:drawableStart="@drawable/ic_type_black"
                     android:gravity="start|center"
@@ -95,6 +97,7 @@
                     android:id="@+id/text_num_reviews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_comment_black"
                     android:drawablePadding="5dp"
                     android:drawableStart="@drawable/ic_comment_black"
                     android:gravity="center"

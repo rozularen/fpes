@@ -55,7 +55,7 @@ public class MapFragment extends BaseFragment
     private static final String TAG = "MapFragment";
     private static final int MY_PERMISSIONS_LOCATION = 1;
     GoogleMap map;
-    @BindView(R.id.mapView)
+    @BindView(R.id.map_view)
     MapView mapView;
     LocationManager locationManager;
     //    @BindView(R.id.btn_try)

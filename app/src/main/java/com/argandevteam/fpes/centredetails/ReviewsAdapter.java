@@ -83,7 +83,7 @@ public class ReviewsAdapter extends BaseAdapter implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.review_like_btn:
+            case R.id.btn_review_likes:
                 incrementReviewLike();
                 break;
             default:
@@ -97,17 +97,17 @@ public class ReviewsAdapter extends BaseAdapter implements View.OnClickListener 
 
     static class ViewHolder {
 
-        @BindView(R.id.review_user_icon)
+        @BindView(R.id.image_user_image)
         ImageView reviewUserIcon;
-        @BindView(R.id.review_user_name)
+        @BindView(R.id.text_review_username)
         TextView reviewUserName;
-        @BindView(R.id.review_rating)
+        @BindView(R.id.rb_user_rating)
         RatingBar reviewRating;
-        @BindView(R.id.review_text)
+        @BindView(R.id.text_review_text)
         TextView reviewText;
-        @BindView(R.id.review_date)
+        @BindView(R.id.text_review_date)
         TextView reviewDate;
-        @BindView(R.id.review_like_btn)
+        @BindView(R.id.btn_review_likes)
         ImageButton reviewLikeButton;
 
         public ViewHolder(View view) {

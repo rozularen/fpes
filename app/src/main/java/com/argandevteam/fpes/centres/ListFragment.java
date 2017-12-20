@@ -171,8 +171,8 @@ public class ListFragment extends BaseFragment implements ListContract.View {
             AlertDialog filterDialog = null;
             View filterView = LayoutInflater.from(getContext()).inflate(R.layout.filter_dialog, null);
 
-            final RadioButton cbPrivate = (RadioButton) filterView.findViewById(R.id.cb_private);
-            final RadioButton cbPublic = (RadioButton) filterView.findViewById(R.id.cb_public);
+            final RadioButton cbPrivate = (RadioButton) filterView.findViewById(R.id.r_btn_private);
+            final RadioButton cbPublic = (RadioButton) filterView.findViewById(R.id.r_btn_public);
 
             filterDialog = new AlertDialog.Builder(getContext()).setTitle("Filtrar")
                     .setView(filterView)

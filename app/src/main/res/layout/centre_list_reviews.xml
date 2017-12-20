@@ -7,7 +7,7 @@
     tools:context="com.argandevteam.fpes.centredetails.CentreDetailsFragment">
 
     <ListView
-        android:id="@+id/reviewList"
+        android:id="@+id/lv_reviews"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
