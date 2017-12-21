@@ -117,4 +117,9 @@ public class RegisterFragment extends BaseFragment implements RegisterContract.V
     public void navigateToHome() {
         mainActivity.navigateToHome();
     }
+
+    @Override
+    public void navigateToLogin() {
+        mainActivity.navigateToLogin();
+    }
 }

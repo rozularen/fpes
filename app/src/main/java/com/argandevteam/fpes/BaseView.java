@@ -10,6 +10,7 @@ import android.content.Context;
 public interface BaseView<P> {
     void setPresenter(P presenter);
 
+
     Context getViewContext();
 
     Activity getViewActivity();

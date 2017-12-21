@@ -81,6 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="16dp"
+            android:visibility="gone"
             android:layout_marginRight="16dp"
             android:background="#a9a9a9" />
 
@@ -89,6 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginTop="16dp"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <TextView
@@ -147,6 +149,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:theme="@style/my_rating_bar_style"
                 android:layout_marginBottom="10dp"
                 android:rating="0"
                 android:scaleX="0.7"

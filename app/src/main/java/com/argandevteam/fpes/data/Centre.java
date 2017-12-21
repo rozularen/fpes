@@ -35,7 +35,7 @@ public class Centre implements Parcelable {
     public String province;
     public String city;
     public String nature;
-    public String municipality;
+    public String locality;
     public String specific_den;
     public String generic_den;
     public String thumbnail_url;
@@ -51,7 +51,7 @@ public class Centre implements Parcelable {
     }
 
     public Centre(String address, int uid, String province, String city, String nature,
-                  String municipality, String thumbnail_url, int postal_code, String specific_den,
+                  String locality, String thumbnail_url, int postal_code, String specific_den,
                   String generic_den, int num_ratings, int num_reviews, double lat, double lon,
                   HashMap<String, Boolean> reviews) {
         this.id = uid;
@@ -60,7 +60,7 @@ public class Centre implements Parcelable {
         this.city = city;
         this.nature = nature;
         this.thumbnail_url = thumbnail_url;
-        this.municipality = municipality;
+        this.locality = locality;
         this.postal_code = postal_code;
         this.specific_den = specific_den;
         this.generic_den = generic_den;
@@ -81,7 +81,7 @@ public class Centre implements Parcelable {
         province = in.readString();
         city = in.readString();
         nature = in.readString();
-        municipality = in.readString();
+        locality = in.readString();
         specific_den = in.readString();
         generic_den = in.readString();
         thumbnail_url = in.readString();
@@ -105,7 +105,7 @@ public class Centre implements Parcelable {
         result.put("province", province);
         result.put("city", city);
         result.put("nature", nature);
-        result.put("municipality", municipality);
+        result.put("locality", locality);
         result.put("specific_den", specific_den);
         result.put("generic_den", generic_den);
         result.put("thumbnail_url", thumbnail_url);
@@ -128,7 +128,7 @@ public class Centre implements Parcelable {
         dest.writeString(city);
         dest.writeString(province);
         dest.writeString(nature);
-        dest.writeString(municipality);
+        dest.writeString(locality);
         dest.writeString(specific_den);
         dest.writeString(generic_den);
         dest.writeInt(num_reviews);

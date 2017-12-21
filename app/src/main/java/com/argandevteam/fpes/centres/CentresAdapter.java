@@ -27,12 +27,12 @@ import butterknife.ButterKnife;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Centre} and makes a call to the
- * specified {@link ListFragment.OnListFragmentInteractionListener}.
+ * specified {@link CentresFragment.OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHolder> {
     private static final String TAG = "RecyclerViewAdapter";
-    private final ListFragment.OnListFragmentInteractionListener mListener;
+    private final CentresFragment.OnListFragmentInteractionListener mListener;
     private final Context context;
     private List<Centre> mCentresList;
     private ItemClickListener listener;
@@ -40,7 +40,7 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
     private DatabaseReference centresReviewsRef;
 
     public CentresAdapter(Context context, List<Centre> items,
-                          ListFragment.OnListFragmentInteractionListener listener) {
+                          CentresFragment.OnListFragmentInteractionListener listener) {
         this.context = context;
         mCentresList = items;
         mListener = listener;
@@ -62,7 +62,7 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
 
         calculateCentreAverageRating(holder, centre);
         holder.centreSpecificDen.setText(centre.specific_den);
-        holder.centreAddress.setText(centre.address);
+        holder.centreCity.setText(centre.locality);
         holder.centreNature.setText(centre.nature);
         holder.centreNumReviews.setText(
                 centre.reviews != null ? String.valueOf(centre.reviews.size()) : "0");
@@ -134,9 +134,11 @@ public class CentresAdapter extends RecyclerView.Adapter<CentresAdapter.ViewHold
 
         @BindView(R.id.text_specific_den)
         TextView centreSpecificDen;
-
+//
+//        @BindView(R.id.text_address)
+//        TextView centreAddress;
         @BindView(R.id.text_address)
-        TextView centreAddress;
+        TextView centreCity;
 
         @BindView(R.id.rb_average_rating)
         RatingBar centreRating;

@@ -256,7 +256,8 @@ public class MainActivity extends AppCompatActivity
     public void navigateToRegister() {
         registerFragment = RegisterFragment.newInstance();
 
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
                 .replace(R.id.container, registerFragment)
                 .addToBackStack(null)
                 .commit();
@@ -269,7 +270,8 @@ public class MainActivity extends AppCompatActivity
     private void navigateToProfile() {
         profileFragment = ProfileFragment.newInstance();
 
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
                 .replace(R.id.container, profileFragment)
                 .addToBackStack(null)
                 .commit();
@@ -282,7 +284,8 @@ public class MainActivity extends AppCompatActivity
     private void navigateToMap() {
         mapFragment = MapFragment.newInstance();
 
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
                 .replace(R.id.container, mapFragment)
                 .addToBackStack(null)
                 .commit();

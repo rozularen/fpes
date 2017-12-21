@@ -82,7 +82,7 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
     TextView centreNature;
     TextView centreRatingValue;
     @BindView(R.id.ad_view)
-    AdView mAdView;
+    AdView adView;
     private DatabaseReference mDatabase;
     private DatabaseReference centreRef;
     private DatabaseReference centresReviews;
@@ -110,7 +110,7 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
         ButterKnife.bind(this, view);
 
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        adView.loadAd(adRequest);
 
         listViewHeader = (ViewGroup) inflater.inflate(R.layout.centre_details, lvReview, false);
         getActivity().setTitle("Detalles");
@@ -291,6 +291,11 @@ public class CentreDetailsFragment extends BaseFragment implements CentreDetails
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
             view.clearFocus();
         }
+    }
+
+
+    public CentreDetailsFragment newInstance() {
+        return new CentreDetailsFragment();
     }
 
     @Override

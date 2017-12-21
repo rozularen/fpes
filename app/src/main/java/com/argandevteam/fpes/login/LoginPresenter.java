@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.argandevteam.fpes.data.source.UsersRepository;
 import com.argandevteam.fpes.login.facebook.FacebookSignIn;
 import com.argandevteam.fpes.login.google.GoogleSignIn;
@@ -117,10 +118,10 @@ public class LoginPresenter implements LoginContract.Presenter {
                                 if (!task.isSuccessful()) {
                                     view.showFirebaseLoginFailed();
                                 } else {
-                                    //                            if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
-                                    //                                addUser(task.getResult().getUser());
-                                    //                                sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
-                                    //                            }
+//                                    if (!sharedPreferences.contains(Constants.FIRST_LAUNCH)) {
+//                                        addUser(task.getResult().getUser());
+//                                        sharedPreferences.edit().putBoolean(Constants.FIRST_LAUNCH, true).apply();
+//                                    }
                                 }
                             }
                         });

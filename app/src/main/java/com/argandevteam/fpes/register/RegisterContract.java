@@ -19,6 +19,8 @@ public interface RegisterContract {
         void userRegisterFailed();
 
         void navigateToHome();
+
+        void navigateToLogin();
     }
 
     interface Presenter extends BasePresenter {

@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 /**
  * Created by markc on 14/12/2017.
@@ -22,11 +23,13 @@ public class RegisterPresenter implements RegisterContract.Presenter {
 
     private FirebaseAuth firebaseAuth;
 
+    private FirebaseUser firebaseUser;
+
     private FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user != null) {
+            firebaseUser = firebaseAuth.getCurrentUser();
+            if (firebaseUser != null) {
                 //User is logged, notify MainActivity to change screen
                 view.navigateToHome();
                 Log.d(TAG, "onAuthStateChanged: USER LOGGED IN");
@@ -57,7 +60,7 @@ public class RegisterPresenter implements RegisterContract.Presenter {
     }
 
     @Override
-    public void registerUser(String username, String email, String password) {
+    public void registerUser(final String username, String email, String password) {
         if (validateString(username)) {
             if (validateString(email)) {
                 if (validateString(password)) {
@@ -69,7 +72,8 @@ public class RegisterPresenter implements RegisterContract.Presenter {
                                     if (!task.isSuccessful()) {
                                         view.userRegisterFailed();
                                     } else {
-                                        view.navigateToHome();
+                                        updateNewUserProfile(username);
+                                        view.navigateToLogin();
                                     }
                                 }
                             });
@@ -102,5 +106,23 @@ public class RegisterPresenter implements RegisterContract.Presenter {
         }
 
         return isValid;
+    }
+
+    public void updateNewUserProfile(String displayName) {
+        firebaseUser = firebaseAuth.getCurrentUser();
+        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setDisplayName(displayName)
+//                .setPhotoUri()
+                .build();
+        firebaseUser.updateProfile(userProfileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "onComplete: USER UPDATED CORRECTLY");
+                } else {
+                    Log.d(TAG, "onComplete: ERROR WHILE UPDATING USER PROFILE");
+                }
+            }
+        });
     }
 }
